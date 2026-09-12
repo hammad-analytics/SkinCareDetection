@@ -2,7 +2,8 @@
   "name": "ai-skin-health-assessment",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "start": "run.bat",
+    "dev": "concurrently -n \"ML,API,WEB\" -c \"magenta,cyan,green\" \"cd ml-service && .venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000\" \"node backend/src/server.js\" \"npm run dev --prefix frontend\"",
     "test": "npm run test --prefix backend && npm run test --prefix frontend"
   },
   "devDependencies": {

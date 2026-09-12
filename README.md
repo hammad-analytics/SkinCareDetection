@@ -1,4 +1,4 @@
-﻿# 🌿 DermAI — Advanced Multimodal Skin Disease Detection & AI Dermatologist
+# 🌿 DermAI — Advanced Multimodal Skin Disease Detection & AI Dermatologist
 
 > **Academic Prototype & Comprehensive Skin Health Diagnostic System**  
 > ⚠️ **MEDICAL DISCLAIMER**: This system provides educational and preliminary screening information only. It is NOT a substitute for professional clinical medical advice, diagnosis, or treatment.
@@ -78,7 +78,22 @@ LLM_PROVIDER=gemini
 
 ### 3. Running the Services
 
-#### **Terminal 1: ML Service (Port 8000)**
+#### ⚡ **Option A: Single-Command Launch (Fastest)**
+From the root directory in VS Code terminal, simply run:
+```powershell
+.\run.bat
+```
+*(Or run `npm run dev` to see all 3 service logs merged in one terminal)*.
+
+This automatically:
+- Launches the **ML Service** on port 8000
+- Launches the **Backend API** on port 5000
+- Launches the **Frontend UI** on port 5173
+- Automatically opens **http://localhost:5173/** in your default browser!
+
+---
+
+#### 🛠️ **Option B: Manual 3-Terminal Launch**
 ```bash
 cd ml-service
 python -m venv .venv
