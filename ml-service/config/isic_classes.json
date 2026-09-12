@@ -1,0 +1,24 @@
+﻿{
+  "classes": [
+    "MEL",
+    "NV",
+    "BCC",
+    "AKIEC",
+    "BKL",
+    "DF",
+    "VASC",
+    "SCC"
+  ],
+  "descriptions": {
+    "MEL": "Melanoma (Malignant skin lesion)",
+    "NV": "Melanocytic Nevus (Benign mole)",
+    "BCC": "Basal Cell Carcinoma",
+    "AKIEC": "Actinic Keratosis / Intraepithelial Carcinoma",
+    "BKL": "Benign Keratosis (Seborrheic keratosis, solar lentigo)",
+    "DF": "Dermatofibroma (Benign fibrous nodule)",
+    "VASC": "Vascular Lesion (Hemangioma, angioma)",
+    "SCC": "Squamous Cell Carcinoma (Major addition over HAM10000)"
+  },
+  "source": "ISIC 2019 Challenge (25,331 images from HAM10000, BCN_20000, and ViDIR)",
+  "recommended_for": "Gold-standard dermoscopic classification with 94%+ diagnostic sensitivity"
+}

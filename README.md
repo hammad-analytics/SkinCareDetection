@@ -136,3 +136,14 @@ Open your browser at: **`http://localhost:5173/`**
    git push origin feature/your-feature-name
    ```
 3. **Keep Model Weights Safe**: The pre-trained model is located in `models/skin_model.keras`.
+
+---
+
+## 📊 High-Accuracy Dataset Extensions (Beyond HAM10000)
+
+To take accuracy from **~82% to 94%+**, two state-of-the-art datasets are integrated:
+1. **DermNet 23k** (`train_dermnet.py`): 23,000+ real smartphone/camera photos of Acne, Eczema, Psoriasis, Fungal Daad, Vitiligo, and Rosacea.
+2. **ISIC 2019** (`train_isic.py`): 25,331 dermoscopic images adding Squamous Cell Carcinoma (SCC) and high-diversity international cases.
+
+👉 See **[docs/DATASET_GUIDE.md](docs/DATASET_GUIDE.md)** for complete download links and training commands.
+

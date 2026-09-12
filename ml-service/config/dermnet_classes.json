@@ -1,0 +1,24 @@
+﻿{
+  "classes": [
+    "acne",
+    "eczema",
+    "psoriasis",
+    "fungal",
+    "vitiligo",
+    "rosacea",
+    "dermatitis",
+    "melanocytic_nevi"
+  ],
+  "descriptions": {
+    "acne": "Acne & Pimples (Blackheads, Whiteheads, Cystic Acne) — मुँहासे / पिंपल्स",
+    "eczema": "Eczema / Atopic Dermatitis (Dry itchy red patches) — एक्जिमा / खाज-खुजली",
+    "psoriasis": "Psoriasis (Silvery scaly plaques) — सोरायसिस / त्वचा पर लाल पपड़ी",
+    "fungal": "Fungal Infection / Ringworm (Tinea, Candidiasis) — दाद / फंगल इन्फेक्शन",
+    "vitiligo": "Vitiligo (Pigment loss patches) — सफेद दाग / विटिलिगो",
+    "rosacea": "Rosacea (Facial redness, flushing) — रोसैसिया / चेहरे पर लाली",
+    "dermatitis": "Contact Dermatitis / Allergic Rashes — एलर्जी और खुजलीदार चकत्ते",
+    "melanocytic_nevi": "Moles / Non-cancerous Lesions — तिल / मस्सा"
+  },
+  "source": "DermNet 23k + Clinical Smartphone Dermatology Benchmark",
+  "recommended_for": "Real-world mobile phone camera photos and everyday skin conditions"
+}
