@@ -11,9 +11,34 @@ import { assessRisk } from "./services/riskService.js";
 import { filterAssistantText } from "./services/safetyService.js";
 import { generateAssistantResponse } from "./services/llmService.js";
 import path from "path";
+import fs from "fs";
 
-const users = [];
-const scans = [];
+const DATA_DIR = path.resolve("data");
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+}
+const USERS_FILE = path.join(DATA_DIR, "users.json");
+const SCANS_FILE = path.join(DATA_DIR, "scans.json");
+
+function loadJson(file, fallback = []) {
+  try {
+    if (fs.existsSync(file)) return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch (e) {
+    console.error("Error reading " + file, e.message);
+  }
+  return fallback;
+}
+
+function saveJson(file, data) {
+  try {
+    fs.writeFileSync(file, JSON.stringify(data, null, 2), "utf8");
+  } catch (e) {
+    console.error("Error writing " + file, e.message);
+  }
+}
+
+const users = loadJson(USERS_FILE, []);
+const scans = loadJson(SCANS_FILE, []);
 const reports = [];
 const chatSessions = new Map();
 
@@ -185,6 +210,7 @@ export function createMemoryApp() {
       if (existing) return res.status(409).json({ error: { message: "An account already exists for this email." } });
       const user = { id: nanoid(), name: req.body.name, email: req.body.email, role: "user", passwordHash: await bcrypt.hash(req.body.password, 12), createdAt: new Date().toISOString() };
       users.push(user);
+      saveJson(USERS_FILE, users);
       res.status(201).json({ token: sign(user), user: { id: user.id, name: user.name, email: user.email, role: user.role } });
     } catch (err) {
       res.status(500).json({ error: { message: "Registration failed. Please try again." } });
