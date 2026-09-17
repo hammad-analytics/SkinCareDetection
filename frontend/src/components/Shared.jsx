@@ -21,9 +21,9 @@ export function LoadingSpinner({ size = "md", text }) {
 
 export function RiskBadge({ level }) {
   const colors = {
-    HIGH: "bg-red-100 text-red-800 border-red-200",
-    MEDIUM: "bg-amber-100 text-amber-800 border-amber-200",
-    LOW: "bg-emerald-100 text-emerald-800 border-emerald-200"
+    HIGH: "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800",
+    MEDIUM: "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-800",
+    LOW: "bg-emerald-100 text-emerald-800 border-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-800"
   };
   return (
     <span className={`inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold ${colors[level] || colors.LOW}`}>
@@ -35,10 +35,10 @@ export function RiskBadge({ level }) {
 
 export function Footer() {
   return (
-    <footer className="border-t bg-white/80 px-4 py-6 text-center text-xs text-slate-500 mt-auto">
-      <p className="font-medium text-slate-600">⚠️ Academic Prototype — Not for Clinical Use</p>
+    <footer className="border-t border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 px-4 py-6 text-center text-xs text-slate-500 dark:text-slate-400 mt-auto transition-colors">
+      <p className="font-medium text-slate-600 dark:text-slate-300">⚠️ Academic Prototype — Not for Clinical Use</p>
       <p className="mt-1">This AI-assisted tool provides preliminary educational skin-health information only. It is not a confirmed diagnosis, prescription, or replacement for professional medical advice. Always consult a qualified dermatologist.</p>
-      <p className="mt-2 text-slate-400">DermAI © 2024 — Powered by HAM10000 Dataset, EfficientNet-B0, Bidirectional GRU & Gemini AI</p>
+      <p className="mt-2 text-slate-400 dark:text-slate-500">DermAI © 2024 — Powered by HAM10000 Dataset, EfficientNet-B0, Bidirectional GRU & Gemini AI</p>
     </footer>
   );
 }

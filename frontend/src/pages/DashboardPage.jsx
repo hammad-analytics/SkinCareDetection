@@ -41,64 +41,64 @@ export default function DashboardPage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           {stats.map(({ label, value, icon: Icon, color }) => (
-            <div key={label} className="rounded-xl border bg-white p-4 animate-slideUp">
-              <div className={`inline-flex rounded-lg p-2 ${color}`}>
+            <div key={label} className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 animate-slideUp shadow-xs">
+              <div className={`inline-flex rounded-lg p-2 ${color} dark:bg-opacity-20`}>
                 <Icon className="h-5 w-5" />
               </div>
-              <p className="mt-3 text-2xl font-bold text-slate-800">{loading ? "—" : value}</p>
-              <p className="text-xs text-slate-500">{label}</p>
+              <p className="mt-3 text-2xl font-bold text-slate-800 dark:text-slate-100">{loading ? "—" : value}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
             </div>
           ))}
         </div>
 
         {/* Quick Actions */}
         <div className="grid md:grid-cols-2 gap-4 mb-6">
-          <Link to="/scan" className="flex items-center gap-4 rounded-xl border bg-white p-5 hover:border-teal-200 hover:shadow-md transition-all group">
-            <div className="rounded-xl bg-teal-50 p-3 group-hover:bg-teal-100 transition-colors">
-              <PlusCircle className="h-6 w-6 text-teal-600" />
+          <Link to="/scan" className="flex items-center gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 hover:border-teal-200 dark:hover:border-teal-700 hover:shadow-md transition-all group">
+            <div className="rounded-xl bg-teal-50 dark:bg-teal-900/40 p-3 group-hover:bg-teal-100 dark:group-hover:bg-teal-900/60 transition-colors">
+              <PlusCircle className="h-6 w-6 text-teal-600 dark:text-teal-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-slate-800">New Skin Assessment</h3>
-              <p className="text-sm text-slate-500">Upload a photo and get AI analysis</p>
+              <h3 className="font-semibold text-slate-800 dark:text-slate-100">New Skin Assessment</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Upload a photo and get AI analysis</p>
             </div>
           </Link>
-          <Link to="/history" className="flex items-center gap-4 rounded-xl border bg-white p-5 hover:border-teal-200 hover:shadow-md transition-all group">
-            <div className="rounded-xl bg-blue-50 p-3 group-hover:bg-blue-100 transition-colors">
-              <Clock className="h-6 w-6 text-blue-600" />
+          <Link to="/history" className="flex items-center gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 hover:border-teal-200 dark:hover:border-teal-700 hover:shadow-md transition-all group">
+            <div className="rounded-xl bg-blue-50 dark:bg-blue-900/40 p-3 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/60 transition-colors">
+              <Clock className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-slate-800">View History</h3>
-              <p className="text-sm text-slate-500">Review past assessments and reports</p>
+              <h3 className="font-semibold text-slate-800 dark:text-slate-100">View History</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Review past assessments and reports</p>
             </div>
           </Link>
         </div>
 
         {/* Recent Scans */}
-        <div className="rounded-xl border bg-white p-5">
+        <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-slate-800">Recent Assessments</h2>
-            {scans.length > 5 && <Link to="/history" className="text-sm text-teal-600 hover:text-teal-700 font-medium">View all →</Link>}
+            <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Recent Assessments</h2>
+            {scans.length > 5 && <Link to="/history" className="text-sm text-teal-600 dark:text-teal-400 hover:text-teal-700 font-medium">View all →</Link>}
           </div>
           {loading ? (
-            <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 rounded-lg animate-shimmer" />)}</div>
+            <div className="space-y-3">{[1,2,3].map(i => <div key={i} className="h-16 rounded-lg animate-shimmer dark:bg-slate-800" />)}</div>
           ) : recentScans.length === 0 ? (
             <div className="text-center py-8">
-              <Scan className="mx-auto h-12 w-12 text-slate-300 mb-3" />
-              <p className="text-sm text-slate-500">No assessments yet. Start your first scan!</p>
-              <Link to="/scan" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-teal-600 hover:text-teal-700">
+              <Scan className="mx-auto h-12 w-12 text-slate-300 dark:text-slate-600 mb-3" />
+              <p className="text-sm text-slate-500 dark:text-slate-400">No assessments yet. Start your first scan!</p>
+              <Link to="/scan" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-teal-600 dark:text-teal-400 hover:text-teal-700">
                 <PlusCircle className="h-4 w-4" /> New Assessment
               </Link>
             </div>
           ) : (
             <div className="space-y-2">
               {recentScans.map((s) => (
-                <Link key={s._id} to={`/result/${s._id}`} className="flex items-center justify-between rounded-lg border p-3 hover:bg-slate-50 transition-colors">
+                <Link key={s._id} to={`/result/${s._id}`} className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 p-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
                   <div>
-                    <p className="font-medium text-sm text-slate-800">{getClassName(s.modelResult?.top_prediction) || s.status}</p>
-                    <p className="text-xs text-slate-400">{new Date(s.createdAt).toLocaleString()}</p>
+                    <p className="font-medium text-sm text-slate-800 dark:text-slate-100">{getClassName(s.modelResult?.top_prediction) || s.status}</p>
+                    <p className="text-xs text-slate-400 dark:text-slate-500">{new Date(s.createdAt).toLocaleString()}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    {s.modelResult?.confidence && <span className="text-xs font-mono text-slate-500">{Math.round(s.modelResult.confidence * 100)}%</span>}
+                    {s.modelResult?.confidence && <span className="text-xs font-mono text-slate-500 dark:text-slate-400">{Math.round(s.modelResult.confidence * 100)}%</span>}
                     {s.risk && <RiskBadge level={s.risk.level} />}
                   </div>
                 </Link>

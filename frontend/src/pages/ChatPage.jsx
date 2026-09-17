@@ -40,14 +40,14 @@ function FormattedAssistantMessage({ content, sources }) {
     const parts = str.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, idx) => {
       if (part.startsWith("**") && part.endsWith("**")) {
-        return <strong key={idx} className="font-semibold text-slate-900">{part.slice(2, -2)}</strong>;
+        return <strong key={idx} className="font-semibold text-slate-900 dark:text-slate-100">{part.slice(2, -2)}</strong>;
       }
       return part;
     });
   };
 
   return (
-    <div className="space-y-4 text-slate-800 text-sm leading-relaxed">
+    <div className="space-y-4 text-slate-800 dark:text-slate-200 text-sm leading-relaxed">
       {blocks.map((b, idx) => {
         const isWarning = b.title.toLowerCase().includes("doctor") || b.title.toLowerCase().includes("warning");
         const isCondition = b.title.toLowerCase().includes("naam") || b.title.toLowerCase().includes("condition");
@@ -58,26 +58,26 @@ function FormattedAssistantMessage({ content, sources }) {
             key={idx}
             className={`rounded-xl p-4 transition-all ${
               isWarning
-                ? "bg-amber-50/80 border border-amber-200 text-amber-950"
+                ? "bg-amber-50/80 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-950 dark:text-amber-200"
                 : isCondition
-                ? "bg-teal-50/70 border border-teal-200"
+                ? "bg-teal-50/70 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/60 text-teal-950 dark:text-teal-200"
                 : isCream
-                ? "bg-emerald-50/60 border border-emerald-200"
-                : "bg-slate-50/70 border border-slate-200"
+                ? "bg-emerald-50/60 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 text-emerald-950 dark:text-emerald-200"
+                : "bg-slate-50/70 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700"
             }`}
           >
             {b.title && (
               <h4 className={`font-bold mb-2.5 flex items-center gap-2 text-sm ${
-                isWarning ? "text-amber-800" : isCondition ? "text-teal-800" : isCream ? "text-emerald-800" : "text-slate-800"
+                isWarning ? "text-amber-800 dark:text-amber-300" : isCondition ? "text-teal-800 dark:text-teal-300" : isCream ? "text-emerald-800 dark:text-emerald-300" : "text-slate-800 dark:text-slate-100"
               }`}>
-                {isWarning && <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />}
-                {isCream && <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />}
+                {isWarning && <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />}
+                {isCream && <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />}
                 {b.title}
               </h4>
             )}
 
             {b.text.length > 0 && (
-              <div className="space-y-2 mb-2 text-slate-700">
+              <div className="space-y-2 mb-2 text-slate-700 dark:text-slate-300">
                 {b.text.map((t, tIdx) => (
                   <p key={tIdx} className="leading-relaxed">{formatBold(t)}</p>
                 ))}
@@ -88,8 +88,8 @@ function FormattedAssistantMessage({ content, sources }) {
               <ul className="space-y-2 mt-2">
                 {b.items.map((item, itemIdx) => (
                   <li key={itemIdx} className="flex items-start gap-2.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-teal-600 mt-2 shrink-0" />
-                    <span className="text-slate-700 leading-relaxed">{formatBold(item)}</span>
+                    <span className="h-1.5 w-1.5 rounded-full bg-teal-600 dark:bg-teal-400 mt-2 shrink-0" />
+                    <span className="text-slate-700 dark:text-slate-300 leading-relaxed">{formatBold(item)}</span>
                   </li>
                 ))}
               </ul>
@@ -99,11 +99,11 @@ function FormattedAssistantMessage({ content, sources }) {
       })}
 
       {sources && sources.length > 0 && (
-        <div className="mt-3 pt-3 border-t border-slate-200">
-          <p className="text-[11px] font-bold text-teal-700 uppercase tracking-wider mb-1.5">📚 Verified Medical Knowledge Base</p>
+        <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+          <p className="text-[11px] font-bold text-teal-700 dark:text-teal-400 uppercase tracking-wider mb-1.5">📚 Verified Medical Knowledge Base</p>
           <div className="flex flex-wrap gap-1.5">
             {sources.map((s, j) => (
-              <span key={j} className="inline-block rounded-md bg-white border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600 shadow-2xs">
+              <span key={j} className="inline-block rounded-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-600 dark:text-slate-300 shadow-2xs">
                 {s.title}
               </span>
             ))}
@@ -192,22 +192,22 @@ export default function ChatPage() {
   ];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-64px)] bg-slate-50">
-      {/* Header */}
-      <div className="border-b bg-white px-4 py-3.5 shadow-xs">
+    <div className="flex flex-col h-[calc(100vh-64px)] bg-slate-50 dark:bg-slate-950 transition-colors">
+      {/* Chat Header */}
+      <div className="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/90 backdrop-blur-sm px-4 py-3 shadow-2xs">
         <div className="mx-auto max-w-3xl flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 shadow-2xs">
-              <Bot className="h-5 w-5 text-teal-700" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-100 dark:bg-teal-900/50 shadow-2xs">
+              <Bot className="h-5 w-5 text-teal-700 dark:text-teal-400" />
             </div>
             <div>
-              <h2 className="font-bold text-slate-800 text-sm sm:text-base">AI Skin Care & Disease Assistant</h2>
-              <p className="text-xs text-slate-500">Broad-Spectrum Guidance • Bilingual (Hindi + English) • Memory Active</p>
+              <h2 className="font-bold text-slate-800 dark:text-slate-100 text-sm sm:text-base">AI Skin Care & Disease Assistant</h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Broad-Spectrum Guidance • Bilingual (Hindi + English) • Memory Active</p>
             </div>
           </div>
           <button
             onClick={startNewChat}
-            className="flex items-center gap-1.5 rounded-lg border border-teal-200 bg-teal-50 px-3 py-1.5 text-xs font-semibold text-teal-700 hover:bg-teal-100 transition-colors shadow-2xs cursor-pointer"
+            className="flex items-center gap-1.5 rounded-lg border border-teal-200 dark:border-teal-700 bg-teal-50 dark:bg-teal-900/40 px-3 py-1.5 text-xs font-semibold text-teal-700 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-800/60 transition-colors shadow-2xs cursor-pointer"
           >
             <PlusCircle className="h-3.5 w-3.5" /> Naya Chat
           </button>
@@ -229,8 +229,8 @@ export default function ChatPage() {
                 msg.role === "user"
                   ? "bg-teal-600 text-white rounded-br-xs shadow-md font-medium text-sm leading-relaxed"
                   : msg.error
-                    ? "bg-red-50 text-red-700 border border-red-200 rounded-bl-xs"
-                    : "bg-white border border-slate-200/90 text-slate-800 rounded-bl-xs shadow-sm"
+                    ? "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800/60 rounded-bl-xs"
+                    : "bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-xs shadow-sm"
               }`}>
                 {msg.role === "user" ? (
                   <p className="whitespace-pre-wrap">{msg.content}</p>
@@ -240,7 +240,7 @@ export default function ChatPage() {
               </div>
 
               {msg.role === "user" && (
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-300 text-slate-700 shadow-2xs mt-1">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-200 shadow-2xs mt-1">
                   <User className="h-5 w-5" />
                 </div>
               )}
@@ -252,9 +252,9 @@ export default function ChatPage() {
               <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-600 text-white shadow-xs">
                 <Bot className="h-5 w-5" />
               </div>
-              <div className="rounded-2xl rounded-bl-xs bg-white border border-slate-200 px-5 py-4 shadow-sm">
-                <div className="flex items-center gap-2.5 text-xs font-medium text-slate-500">
-                  <Sparkles className="h-4 w-4 animate-spin text-teal-600" />
+              <div className="rounded-2xl rounded-bl-xs bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-5 py-4 shadow-sm">
+                <div className="flex items-center gap-2.5 text-xs font-medium text-slate-500 dark:text-slate-400">
+                  <Sparkles className="h-4 w-4 animate-spin text-teal-600 dark:text-teal-400" />
                   <span>Dermatologist Assistant soch raha hai aur saaf tarike se likh raha hai...</span>
                 </div>
               </div>
@@ -263,14 +263,14 @@ export default function ChatPage() {
 
           {/* Quick Disease Pills */}
           <div className="pt-2">
-            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2.5">💡 Aam Skin Bimaariyon Ke Sawaal (Click to Ask):</p>
+            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2.5">💡 Aam Skin Bimaariyon Ke Sawaal (Click to Ask):</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {conditionPills.map((p, idx) => (
                 <button
                   key={idx}
                   onClick={() => send(p.query)}
                   disabled={loading}
-                  className="text-left rounded-xl border border-slate-200 bg-white p-2.5 text-xs font-medium text-slate-700 hover:border-teal-400 hover:bg-teal-50/60 hover:text-teal-900 transition-all shadow-2xs cursor-pointer"
+                  className="text-left rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5 text-xs font-medium text-slate-700 dark:text-slate-300 hover:border-teal-400 dark:hover:border-teal-600 hover:bg-teal-50/60 dark:hover:bg-slate-800 hover:text-teal-900 dark:hover:text-teal-300 transition-all shadow-2xs cursor-pointer"
                 >
                   {p.label}
                 </button>
@@ -283,11 +283,11 @@ export default function ChatPage() {
       </div>
 
       {/* Input Box */}
-      <div className="border-t bg-white px-4 py-3.5 shadow-lg">
+      <div className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3.5 shadow-lg">
         <div className="mx-auto max-w-3xl">
           <div className="flex gap-2">
             <input
-              className="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-sm focus:border-teal-600 focus:ring-2 focus:ring-teal-100 transition-all outline-hidden"
+              className="flex-1 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-3 text-sm focus:border-teal-600 focus:ring-2 focus:ring-teal-100 dark:focus:ring-teal-900 transition-all outline-hidden"
               placeholder="Acne, Eczema, Daad/Fungal, Moles ya Safe Creams ke baare mein poochein..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -297,12 +297,12 @@ export default function ChatPage() {
             <button
               onClick={() => send()}
               disabled={!input.trim() || loading}
-              className="rounded-xl bg-teal-600 px-5 py-3 text-white hover:bg-teal-700 disabled:bg-slate-300 transition-all shadow-xs cursor-pointer"
+              className="rounded-xl bg-teal-600 px-5 py-3 text-white hover:bg-teal-700 disabled:bg-slate-300 dark:disabled:bg-slate-800 transition-all shadow-xs cursor-pointer"
             >
               <Send className="h-4 w-4" />
             </button>
           </div>
-          <p className="mt-2 text-center text-[10px] text-slate-400">
+          <p className="mt-2 text-center text-[10px] text-slate-400 dark:text-slate-500">
             Shiksha aur marghdarshan ke liye. Kisi bhi gambhir bimaari me registered dermatologist se zaroor milein.
           </p>
         </div>

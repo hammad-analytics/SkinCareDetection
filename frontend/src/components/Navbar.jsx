@@ -28,9 +28,9 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b bg-white/95 backdrop-blur-sm shadow-xs">
+      <header className="sticky top-0 z-40 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm shadow-xs transition-colors">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <Link to="/" className="flex items-center gap-2 text-lg font-bold text-teal-700 hover:text-teal-800 transition-colors">
+          <Link to="/" className="flex items-center gap-2 text-lg font-bold text-teal-700 dark:text-teal-400 hover:text-teal-800 dark:hover:text-teal-300 transition-colors">
             <Stethoscope className="h-7 w-7" />
             <span>Derm<span className="text-teal-500">AI</span></span>
           </Link>
@@ -40,7 +40,9 @@ export default function Navbar() {
             {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
               <Link key={to} to={to}
                 className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
-                  location.pathname === to ? "bg-teal-50 text-teal-700 shadow-2xs" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  location.pathname === to
+                    ? "bg-teal-50 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300 shadow-2xs"
+                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
                 }`}>
                 <Icon className="h-4 w-4" /> {label}
               </Link>
@@ -48,58 +50,60 @@ export default function Navbar() {
 
             <button
               onClick={() => setDoctorModalOpen(true)}
-              className="flex items-center gap-1.5 rounded-lg border border-teal-200 bg-teal-50 px-3 py-2 text-xs font-bold text-teal-800 hover:bg-teal-100 transition-all cursor-pointer shadow-2xs ml-1"
+              className="flex items-center gap-1.5 rounded-lg border border-teal-200 dark:border-teal-700 bg-teal-50 dark:bg-teal-900/40 px-3 py-2 text-xs font-bold text-teal-800 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-800/60 transition-all cursor-pointer shadow-2xs ml-1"
             >
-              <MapPin className="h-3.5 w-3.5 text-teal-600" /> Find Doctor
+              <MapPin className="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" /> Find Doctor
             </button>
 
             {/* Light / Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
-              className="flex items-center justify-center h-8 w-8 rounded-lg border border-slate-200 hover:bg-slate-100 transition-colors ml-1 cursor-pointer text-slate-600"
+              className="flex items-center justify-center h-8 w-8 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors ml-1 cursor-pointer text-slate-600 dark:text-slate-300"
               title={theme === "dark" ? "Light Mode" : "Dark Mode"}
             >
-              {theme === "dark" ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600" />}
+              {theme === "dark" ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600 dark:text-slate-300" />}
             </button>
 
-            <div className="ml-2 h-5 w-px bg-slate-200" />
-            <button onClick={handleLogout} className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all cursor-pointer">
+            <div className="ml-2 h-5 w-px bg-slate-200 dark:bg-slate-700" />
+            <button onClick={handleLogout} className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-all cursor-pointer">
               <LogOut className="h-4 w-4" /> Logout
             </button>
           </nav>
 
           {/* Mobile toggle */}
-          <button onClick={() => setOpen(!open)} className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 md:hidden">
+          <button onClick={() => setOpen(!open)} className="rounded-lg p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 md:hidden">
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
 
         {/* Mobile nav */}
         {open && (
-          <nav className="border-t bg-white px-4 py-3 md:hidden animate-fadeIn space-y-1">
+          <nav className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 md:hidden animate-fadeIn space-y-1">
             {NAV_ITEMS.map(({ to, label, icon: Icon }) => (
               <Link key={to} to={to} onClick={() => setOpen(false)}
                 className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
-                  location.pathname === to ? "bg-teal-50 text-teal-700 font-bold" : "text-slate-600"
+                  location.pathname === to
+                    ? "bg-teal-50 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300 font-bold"
+                    : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
                 }`}>
                 <Icon className="h-4 w-4" /> {label}
               </Link>
             ))}
             <button
               onClick={() => { setOpen(false); setDoctorModalOpen(true); }}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold text-teal-700 bg-teal-50"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-900/40"
             >
-              <MapPin className="h-4 w-4" /> Find Nearby Doctors
+              <MapPin className="h-4 w-4 text-teal-600 dark:text-teal-400" /> Find Nearby Doctors
             </button>
             <button
               onClick={() => { toggleTheme(); setOpen(false); }}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 cursor-pointer"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
             >
-              {theme === "dark" ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600" />}
+              {theme === "dark" ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4 text-slate-600 dark:text-slate-300" />}
               <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
             </button>
             <button onClick={() => { setOpen(false); handleLogout(); }}
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 cursor-pointer">
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 cursor-pointer">
               <LogOut className="h-4 w-4" /> Logout
             </button>
           </nav>

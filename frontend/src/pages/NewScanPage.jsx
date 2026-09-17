@@ -150,28 +150,28 @@ export default function NewScanPage() {
 
         {/* Step 0: Upload Image */}
         {step === 0 && (
-          <div className="animate-slideUp bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-            <h2 className="text-xl font-extrabold text-slate-800 mb-1">Upload Skin Photo</h2>
-            <p className="text-xs text-slate-500 mb-6">Take a photo or choose from gallery. You can scan with <strong>Image Only</strong> without typing anything!</p>
+          <div className="animate-slideUp bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs">
+            <h2 className="text-xl font-extrabold text-slate-800 dark:text-slate-100 mb-1">Upload Skin Photo</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">Take a photo or choose from gallery. You can scan with <strong>Image Only</strong> without typing anything!</p>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <button onClick={() => setCameraOpen(true)} className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-teal-300 bg-teal-50/50 p-8 text-center hover:border-teal-500 hover:bg-teal-50 transition-all">
-                <Camera className="mb-3 h-10 w-10 text-teal-600" />
-                <span className="font-bold text-teal-800 text-sm">Take Photo</span>
-                <span className="text-[11px] text-teal-600 mt-1">Open camera &amp; capture live</span>
+              <button onClick={() => setCameraOpen(true)} className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-teal-300 dark:border-teal-700 bg-teal-50/50 dark:bg-teal-900/20 p-8 text-center hover:border-teal-500 dark:hover:border-teal-500 hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-all">
+                <Camera className="mb-3 h-10 w-10 text-teal-600 dark:text-teal-400" />
+                <span className="font-bold text-teal-800 dark:text-teal-300 text-sm">Take Photo</span>
+                <span className="text-[11px] text-teal-600 dark:text-teal-400 mt-1">Open camera &amp; capture live</span>
               </button>
 
-              <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/50 p-8 text-center hover:border-slate-400 hover:bg-slate-50 transition-all">
-                <FileImage className="mb-3 h-10 w-10 text-slate-500" />
-                <span className="font-bold text-slate-700 text-sm">Choose File</span>
-                <span className="text-[11px] text-slate-400 mt-1">Upload from files or gallery</span>
+              <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 p-8 text-center hover:border-slate-400 dark:hover:border-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all">
+                <FileImage className="mb-3 h-10 w-10 text-slate-500 dark:text-slate-400" />
+                <span className="font-bold text-slate-700 dark:text-slate-200 text-sm">Choose File</span>
+                <span className="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Upload from files or gallery</span>
                 <input className="sr-only" type="file" accept="image/*,.heic,.heif" onChange={(e) => choose(e.target.files?.[0])} />
               </label>
             </div>
 
             {preview && (
-              <div className="mt-6 animate-fadeIn border-t border-slate-100 pt-6">
-                <div className="rounded-xl border overflow-hidden bg-slate-900/5 p-2">
+              <div className="mt-6 animate-fadeIn border-t border-slate-100 dark:border-slate-800 pt-6">
+                <div className="rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden bg-slate-900/5 dark:bg-slate-950 p-2">
                   <img alt="Selected skin area" src={preview} className="mx-auto max-h-72 rounded-lg object-contain" />
                 </div>
 
@@ -179,7 +179,7 @@ export default function NewScanPage() {
                 <div className="mt-4 flex flex-col sm:flex-row gap-2.5">
                   <button
                     onClick={() => { setFile(null); setPreview(""); }}
-                    className="rounded-xl border border-slate-300 py-3 px-4 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                    className="rounded-xl border border-slate-300 dark:border-slate-700 py-3 px-4 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
                   >
                     Change Photo
                   </button>
@@ -196,7 +196,7 @@ export default function NewScanPage() {
                   <button
                     onClick={uploadImage}
                     disabled={loading}
-                    className="rounded-xl border border-teal-200 bg-teal-50 py-3 px-4 text-xs font-bold text-teal-800 hover:bg-teal-100 transition-colors cursor-pointer"
+                    className="rounded-xl border border-teal-200 dark:border-teal-700 bg-teal-50 dark:bg-teal-900/40 py-3 px-4 text-xs font-bold text-teal-800 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-800/60 transition-colors cursor-pointer"
                   >
                     Add Symptoms (Optional) →
                   </button>
@@ -208,17 +208,17 @@ export default function NewScanPage() {
 
         {/* Step 1: Optional Symptoms */}
         {step === 1 && (
-          <div className="animate-slideUp bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
-            <div className="flex items-center justify-between gap-2 mb-4 border-b border-slate-100 pb-3">
+          <div className="animate-slideUp bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-xs">
+            <div className="flex items-center justify-between gap-2 mb-4 border-b border-slate-100 dark:border-slate-800 pb-3">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-emerald-500" />
-                <h2 className="text-lg font-bold text-slate-800">Add Symptoms (Optional)</h2>
+                <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Add Symptoms (Optional)</h2>
               </div>
-              <span className="text-xs text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full font-medium">Bina likhe bhi submit kar sakte hain</span>
+              <span className="text-xs text-slate-400 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full font-medium">Bina likhe bhi submit kar sakte hain</span>
             </div>
 
             {preview && (
-              <div className="mb-4 rounded-xl border overflow-hidden bg-slate-50 p-2">
+              <div className="mb-4 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden bg-slate-50 dark:bg-slate-950 p-2">
                 <img alt="Uploaded image" src={preview} className="mx-auto max-h-36 rounded-lg object-contain" />
               </div>
             )}
@@ -226,10 +226,10 @@ export default function NewScanPage() {
             <div className="space-y-3.5">
               {fields.map(({ key, label, placeholder, rows }) => (
                 <div key={key}>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">{label}</label>
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">{label}</label>
                   <textarea
                     rows={rows}
-                    className="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-xs focus:border-teal-600 outline-hidden resize-none"
+                    className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-3.5 py-2 text-xs focus:border-teal-600 dark:focus:border-teal-500 outline-hidden resize-none"
                     placeholder={placeholder}
                     value={form[key]}
                     onChange={(e) => set(key, e.target.value)}
@@ -241,7 +241,7 @@ export default function NewScanPage() {
             <div className="mt-6 flex gap-3">
               <button
                 onClick={() => setStep(0)}
-                className="flex items-center gap-1 rounded-xl border border-slate-300 px-4 py-3 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
+                className="flex items-center gap-1 rounded-xl border border-slate-300 dark:border-slate-700 px-4 py-3 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer"
               >
                 <ChevronLeft className="h-4 w-4" /> Back
               </button>
