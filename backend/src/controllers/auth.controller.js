@@ -38,3 +38,12 @@ export async function login(req, res, next) {
 export function logout(_req, res) {
   res.json({ ok: true });
 }
+
+export async function listUsers(_req, res, next) {
+  try {
+    const users = await User.find({}, "-passwordHash").sort({ createdAt: -1 });
+    res.json({ total: users.length, users });
+  } catch (error) {
+    next(error);
+  }
+}

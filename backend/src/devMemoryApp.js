@@ -199,6 +199,20 @@ export function createMemoryApp() {
 
   app.post("/api/auth/logout", (_req, res) => res.json({ ok: true }));
 
+  /* ── All Registered Users (Admin / Debug) ── */
+  app.get("/api/auth/users", (_req, res) => {
+    res.json({
+      total: users.length,
+      users: users.map((u) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+        createdAt: u.createdAt
+      }))
+    });
+  });
+
   /* ── User Profile ── */
   app.get("/api/auth/profile", auth, (req, res) => {
     const user = users.find((item) => item.id === req.user.sub);
