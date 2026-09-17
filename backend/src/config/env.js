@@ -16,7 +16,7 @@ export const env = {
   ollamaModel: process.env.OLLAMA_MODEL || "qwen3:8b",
   llmProvider: process.env.LLM_PROVIDER || "gemini",
   geminiApiKey: process.env.GEMINI_API_KEY || "",
-  geminiModel: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+  geminiModel: process.env.GEMINI_MODEL || "gemini-3.6-flash",
   ragDatabase: process.env.RAG_DATABASE || "./rag/knowledge",
   confidenceThreshold: Number(process.env.CONFIDENCE_THRESHOLD || 0.55)
 };

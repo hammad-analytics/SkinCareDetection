@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
 import { LoadingSpinner, Footer } from "../components/Shared";
 import { Camera, FileImage, Upload, ChevronRight, ChevronLeft, AlertCircle, CheckCircle, Activity, Zap } from "lucide-react";
+import CameraCaptureModal from "../components/CameraCaptureModal";
 
 const STEPS = ["Upload Image", "Describe Symptoms (Optional)", "AI Analysis"];
 
@@ -14,6 +15,7 @@ export default function NewScanPage() {
   const [scanId, setScanId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [cameraOpen, setCameraOpen] = useState(false);
   const [stage, setStage] = useState("");
   const [form, setForm] = useState({ symptoms: "", duration: "", allergies: "", history: "", bodyArea: "", notes: "" });
 
@@ -153,12 +155,11 @@ export default function NewScanPage() {
             <p className="text-xs text-slate-500 mb-6">Take a photo or choose from gallery. You can scan with <strong>Image Only</strong> without typing anything!</p>
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-teal-300 bg-teal-50/50 p-8 text-center hover:border-teal-500 hover:bg-teal-50 transition-all">
+              <button onClick={() => setCameraOpen(true)} className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-teal-300 bg-teal-50/50 p-8 text-center hover:border-teal-500 hover:bg-teal-50 transition-all">
                 <Camera className="mb-3 h-10 w-10 text-teal-600" />
                 <span className="font-bold text-teal-800 text-sm">Take Photo</span>
-                <span className="text-[11px] text-teal-600 mt-1">Use camera on affected area</span>
-                <input className="sr-only" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" onChange={(e) => choose(e.target.files?.[0])} />
-              </label>
+                <span className="text-[11px] text-teal-600 mt-1">Open camera &amp; capture live</span>
+              </button>
 
               <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50/50 p-8 text-center hover:border-slate-400 hover:bg-slate-50 transition-all">
                 <FileImage className="mb-3 h-10 w-10 text-slate-500" />
@@ -281,6 +282,11 @@ export default function NewScanPage() {
         )}
       </div>
       <Footer />
+      <CameraCaptureModal
+        isOpen={cameraOpen}
+        onClose={() => setCameraOpen(false)}
+        onCapture={(f) => { choose(f); setCameraOpen(false); }}
+      />
     </div>
   );
 }

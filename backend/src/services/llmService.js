@@ -70,69 +70,93 @@ async function generateWithGemini({ contextHeader, question, imageBase64, histor
   if (!env.geminiApiKey) {
     throw new HttpError(503, "Gemini API key is missing. Add GEMINI_API_KEY to your .env file.");
   }
-  try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${env.geminiModel}:generateContent?key=${env.geminiApiKey}`;
 
-    const contents = [];
+  // Resilient 3-tier model fallback cascade
+  const models = [env.geminiModel, "gemini-3.5-flash", "gemini-3.6-flash"];
+  // Deduplicate while preserving order
+  const uniqueModels = [...new Set(models)];
 
-    // Filter valid history turns
-    const validHistory = history.filter(
-      (h) => h && (h.role === "user" || h.role === "assistant" || h.role === "model") && h.content
-    );
+  const contents = [];
 
-    for (let i = 0; i < validHistory.length; i++) {
-      const turn = validHistory[i];
-      contents.push({
-        role: turn.role === "assistant" || turn.role === "model" ? "model" : "user",
-        parts: [{ text: turn.content }]
-      });
-    }
+  // Filter valid history turns
+  const validHistory = history.filter(
+    (h) => h && (h.role === "user" || h.role === "assistant" || h.role === "model") && h.content
+  );
 
-    // Build the latest turn parts
-    const latestParts = [];
-
-    // If we have an image, feed it directly to Gemini Multimodal Vision!
-    if (imageBase64) {
-      latestParts.push({
-        inlineData: {
-          mimeType: "image/jpeg",
-          data: imageBase64
-        }
-      });
-    }
-
-    let promptText = question || "Please visually analyze this skin image and symptoms. Identify whether this is Acne, Eczema, Psoriasis, Fungal Tinea (Daad), Vitiligo, Rosacea, or a Mole/Lesion, and provide clear guidance.";
-    if (contextHeader) {
-      promptText = `[CLINICAL ASSESSMENT CONTEXT]\n${contextHeader}\n\n[USER INQUIRY / TASK]\n${promptText}`;
-    }
-
-    latestParts.push({ text: promptText });
-
+  for (let i = 0; i < validHistory.length; i++) {
+    const turn = validHistory[i];
     contents.push({
-      role: "user",
-      parts: latestParts
-    });
-
-    const payload = {
-      systemInstruction: {
-        parts: [{ text: SYSTEM_PROMPT }]
-      },
-      contents,
-      generationConfig: {
-        temperature: 0.3,
-        topP: 0.9,
-        maxOutputTokens: 1600
-      }
-    };
-
-    const { data } = await axios.post(url, payload, { timeout: 45000 });
-    return data.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n\n") || "";
-  } catch (error) {
-    console.error("Gemini API error details:", error?.response?.data || error?.message);
-    throw new HttpError(503, "Gemini assistant is unavailable or the API key/model is invalid.", {
-      cause: error.message
+      role: turn.role === "assistant" || turn.role === "model" ? "model" : "user",
+      parts: [{ text: turn.content }]
     });
   }
+
+  // Build the latest turn parts
+  const latestParts = [];
+
+  // If we have an image, feed it directly to Gemini Multimodal Vision!
+  if (imageBase64) {
+    latestParts.push({
+      inlineData: {
+        mimeType: "image/jpeg",
+        data: imageBase64
+      }
+    });
+  }
+
+  let promptText = question || "Please visually analyze this skin image and symptoms. Identify whether this is Acne, Eczema, Psoriasis, Fungal Tinea (Daad), Vitiligo, Rosacea, or a Mole/Lesion, and provide clear guidance.";
+  if (contextHeader) {
+    promptText = `[CLINICAL ASSESSMENT CONTEXT]\n${contextHeader}\n\n[USER INQUIRY / TASK]\n${promptText}`;
+  }
+
+  latestParts.push({ text: promptText });
+
+  contents.push({
+    role: "user",
+    parts: latestParts
+  });
+
+  const payload = {
+    systemInstruction: {
+      parts: [{ text: SYSTEM_PROMPT }]
+    },
+    contents,
+    generationConfig: {
+      temperature: 0.3,
+      topP: 0.9,
+      maxOutputTokens: 1600
+    }
+  };
+
+  // Try each model in cascade
+  let lastError = null;
+  for (const model of uniqueModels) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${env.geminiApiKey}`;
+      const { data } = await axios.post(url, payload, { timeout: 45000 });
+      const text = data.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n\n") || "";
+      if (text) {
+        if (model !== env.geminiModel) {
+          console.log(`Gemini fallback: ${env.geminiModel} unavailable, used ${model} successfully.`);
+        }
+        return text;
+      }
+    } catch (error) {
+      const status = error?.response?.status;
+      const msg = error?.response?.data?.error?.message || error?.message || "";
+      console.warn(`Gemini model ${model} failed (HTTP ${status}): ${msg}`);
+      lastError = error;
+      // Only retry on 404 (model not found) or 503 (overloaded) — not on 400/401/403
+      if (status && status !== 404 && status !== 503 && status !== 429) {
+        break;
+      }
+    }
+  }
+
+  console.error("All Gemini models failed. Last error:", lastError?.response?.data || lastError?.message);
+  throw new HttpError(503, "Gemini assistant is temporarily unavailable. Please try again in a moment.", {
+    cause: lastError?.message
+  });
 }
 
 async function generateWithOllama({ contextHeader, question, history = [] }) {

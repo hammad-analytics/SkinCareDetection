@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 */node_modules/
 
@@ -28,6 +28,8 @@ uploads/*
 !uploads/.gitkeep
 backend/uploads/*
 !backend/uploads/.gitkeep
+backend/data/*
+!backend/data/.gitkeep
 
 # Build & Distribution outputs
 dist/
