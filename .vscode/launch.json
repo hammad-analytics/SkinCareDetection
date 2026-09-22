@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "🚀 Run DermAI (All 3 Services)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": ".\\run.bat"
+    }
+  ]
+}
