@@ -57,39 +57,45 @@
 ## 🚀 Quickstart for Team Members
 
 ### 1. Prerequisites
-- **Node.js** (v18 or higher)
-- **Python** (v3.10 or v3.11 recommended)
-- **Git**
+- **Node.js** (v18 or higher) — [Download](https://nodejs.org/)
+- **Python** (v3.10 or v3.11 recommended) — [Download](https://python.org/) *(check "Add to PATH" during install!)*
+- **Git** — [Download](https://git-scm.com/)
 
 ---
 
-### 2. Environment Configuration
-Copy the `.env.example` file to `.env`:
-```bash
-cp .env.example .env
+### 2. First Time Setup (New PC / Fresh Download) ⚡
+
+> **IMPORTANT:** After cloning or downloading the ZIP, you MUST run setup first!
+> `.\run.bat` alone will NOT work on a fresh download because dependencies are not included.
+
+**One command does everything — installs all packages, creates config, and starts the app:**
+```powershell
+.\setup.bat
 ```
-Open `.env` and add your **Gemini API Key** (or use local Ollama):
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-LLM_PROVIDER=gemini
-```
+
+This automatically:
+- ✅ Installs Node.js packages (root + backend + frontend)
+- ✅ Creates Python virtual environment + installs TensorFlow, FastAPI, etc.
+- ✅ Creates `.env` config file (you'll need to add your Gemini API key)
+- ✅ Launches all 3 services and opens the browser
+
+After setup completes, edit `.env` and replace `YOUR_GEMINI_API_KEY_HERE` with your real key from [Google AI Studio](https://aistudio.google.com/apikey).
 
 ---
 
-### 3. Running the Services
+### 3. Running After Setup (Day-to-Day)
 
-#### ⚡ **Option A: Single-Command Launch (Fastest)**
-From the root directory in VS Code terminal, simply run:
+Once setup is done, you only need this one command to start the project:
 ```powershell
 .\run.bat
 ```
-*(Or run `npm run dev` to see all 3 service logs merged in one terminal)*.
+*(Or press `F5` in VS Code, or run `npm run dev` for merged logs)*
 
-This automatically:
-- Launches the **ML Service** on port 8000
-- Launches the **Backend API** on port 5000
-- Launches the **Frontend UI** on port 5173
-- Automatically opens **http://localhost:5173/** in your default browser!
+This launches:
+- **ML Service** on port 8000
+- **Backend API** on port 5000
+- **Frontend UI** on port 5173
+- Automatically opens **http://localhost:5173/** in your browser!
 
 ---
 
