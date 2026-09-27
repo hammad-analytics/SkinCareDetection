@@ -8,7 +8,7 @@ export default function LoginPage() {
   const { login, register } = useAuth();
   const navigate = useNavigate();
   const [mode, setMode] = useState("login");
-  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -30,8 +30,9 @@ export default function LoginPage() {
     try {
       if (mode === "register") {
         if (!form.name.trim()) { setError("Name is required"); setLoading(false); return; }
+        if (!form.phone.trim() || form.phone.replace(/\D/g, "").length < 10) { setError("Valid phone number is required (min 10 digits)"); setLoading(false); return; }
         if (form.password.length < 6) { setError("Password must be at least 6 characters"); setLoading(false); return; }
-        await register(form.name, form.email, form.password);
+        await register(form.name, form.email, form.password, form.phone);
       } else {
         await login(form.email, form.password);
       }
@@ -126,7 +127,7 @@ export default function LoginPage() {
               </div>
             ))}
           </div>
-          <p className="mt-8 text-xs text-teal-300">Academic prototype • HAM10000 Dataset • Not for clinical use</p>
+          <p className="mt-8 text-xs text-teal-300">Major Project 2026–2027 • HAM10000 Dataset • B.Tech Computer Science</p>
         </div>
       </div>
 
@@ -155,6 +156,22 @@ export default function LoginPage() {
               <div className="animate-fadeIn">
                 <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
                 <input className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors" placeholder="Dr. Jane Smith" value={form.name} onChange={(e) => set("name", e.target.value)} />
+              </div>
+            )}
+            {mode === "register" && (
+              <div className="animate-fadeIn">
+                <label className="block text-sm font-medium text-slate-700 mb-1">Phone Number</label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">+91</span>
+                  <input
+                    className="w-full rounded-lg border border-slate-300 pl-12 pr-4 py-3 text-sm transition-colors"
+                    type="tel"
+                    placeholder="98765 43210"
+                    maxLength={15}
+                    value={form.phone}
+                    onChange={(e) => set("phone", e.target.value)}
+                  />
+                </div>
               </div>
             )}
             <div>

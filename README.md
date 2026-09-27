@@ -1,6 +1,6 @@
 # 🌿 DermAI — Advanced Multimodal Skin Disease Detection & AI Dermatologist
 
-> **Academic Prototype & Comprehensive Skin Health Diagnostic System**  
+> **B.Tech Major Project 2026–2027 • Comprehensive Skin Health Diagnostic System**  
 > ⚠️ **MEDICAL DISCLAIMER**: This system provides educational and preliminary screening information only. It is NOT a substitute for professional clinical medical advice, diagnosis, or treatment.
 
 ---

@@ -17,8 +17,8 @@ export async function register(req, res, next) {
     const input = registerSchema.parse(req.body);
     const existing = await User.findOne({ email: input.email });
     if (existing) throw new HttpError(409, "An account already exists for this email.");
-    const user = await User.create({ name: input.name, email: input.email, passwordHash: await bcrypt.hash(input.password, 12) });
-    res.status(201).json({ token: tokenFor(user), user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+    const user = await User.create({ name: input.name, email: input.email, phone: req.body.phone || "", passwordHash: await bcrypt.hash(input.password, 12) });
+    res.status(201).json({ token: tokenFor(user), user: { id: user._id, name: user.name, email: user.email, phone: user.phone, role: user.role } });
   } catch (error) {
     next(error);
   }

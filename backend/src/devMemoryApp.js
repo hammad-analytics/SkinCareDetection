@@ -208,10 +208,10 @@ export function createMemoryApp() {
       }
       const existing = users.find((u) => u.email === req.body.email);
       if (existing) return res.status(409).json({ error: { message: "An account already exists for this email." } });
-      const user = { id: nanoid(), name: req.body.name, email: req.body.email, role: "user", passwordHash: await bcrypt.hash(req.body.password, 12), createdAt: new Date().toISOString() };
+      const user = { id: nanoid(), name: req.body.name, email: req.body.email, phone: req.body.phone || "", role: "user", passwordHash: await bcrypt.hash(req.body.password, 12), createdAt: new Date().toISOString() };
       users.push(user);
       saveJson(USERS_FILE, users);
-      res.status(201).json({ token: sign(user), user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+      res.status(201).json({ token: sign(user), user: { id: user.id, name: user.name, email: user.email, phone: user.phone, role: user.role } });
     } catch (err) {
       res.status(500).json({ error: { message: "Registration failed. Please try again." } });
     }
@@ -267,6 +267,7 @@ export function createMemoryApp() {
         id: u.id,
         name: u.name,
         email: u.email,
+        phone: u.phone || "",
         role: u.role,
         createdAt: u.createdAt
       }))
