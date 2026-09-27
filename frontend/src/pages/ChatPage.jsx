@@ -47,11 +47,32 @@ function FormattedAssistantMessage({ content, sources }) {
   };
 
   return (
-    <div className="space-y-4 text-slate-800 dark:text-slate-200 text-sm leading-relaxed">
+    <div className="space-y-3 text-slate-800 dark:text-slate-100 text-sm leading-relaxed">
       {blocks.map((b, idx) => {
         const isWarning = b.title.toLowerCase().includes("doctor") || b.title.toLowerCase().includes("warning");
         const isCondition = b.title.toLowerCase().includes("naam") || b.title.toLowerCase().includes("condition");
-        const isCream = b.title.toLowerCase().includes("cream") || b.title.toLowerCase().includes("dekhbhal");
+        const isCream = b.title.toLowerCase().includes("cream") || b.title.toLowerCase().includes("dekhbhal") || b.title.toLowerCase().includes("treatment");
+
+        // If it's a natural conversational paragraph without a formal section heading, render smoothly
+        if (!b.title) {
+          return (
+            <div key={idx} className="space-y-2">
+              {b.text.map((t, tIdx) => (
+                <p key={tIdx} className="leading-relaxed text-slate-800 dark:text-slate-200">{formatBold(t)}</p>
+              ))}
+              {b.items.length > 0 && (
+                <ul className="space-y-1.5 my-2">
+                  {b.items.map((item, itemIdx) => (
+                    <li key={itemIdx} className="flex items-start gap-2.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-teal-600 dark:bg-teal-400 mt-2 shrink-0" />
+                      <span className="text-slate-800 dark:text-slate-200 leading-relaxed">{formatBold(item)}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          );
+        }
 
         return (
           <div
@@ -66,15 +87,13 @@ function FormattedAssistantMessage({ content, sources }) {
                 : "bg-slate-50/70 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700"
             }`}
           >
-            {b.title && (
-              <h4 className={`font-bold mb-2.5 flex items-center gap-2 text-sm ${
-                isWarning ? "text-amber-800 dark:text-amber-300" : isCondition ? "text-teal-800 dark:text-teal-300" : isCream ? "text-emerald-800 dark:text-emerald-300" : "text-slate-800 dark:text-slate-100"
-              }`}>
-                {isWarning && <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />}
-                {isCream && <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />}
-                {b.title}
-              </h4>
-            )}
+            <h4 className={`font-bold mb-2.5 flex items-center gap-2 text-sm ${
+              isWarning ? "text-amber-800 dark:text-amber-300" : isCondition ? "text-teal-800 dark:text-teal-300" : isCream ? "text-emerald-800 dark:text-emerald-300" : "text-slate-800 dark:text-slate-100"
+            }`}>
+              {isWarning && <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />}
+              {isCream && <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />}
+              {b.title}
+            </h4>
 
             {b.text.length > 0 && (
               <div className="space-y-2 mb-2 text-slate-700 dark:text-slate-300">
