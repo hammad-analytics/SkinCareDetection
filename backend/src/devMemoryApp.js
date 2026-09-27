@@ -196,6 +196,7 @@ export function createMemoryApp() {
   app.use("/uploads", express.static(path.resolve(env.uploadDir)));
 
   /* ── Health ── */
+  app.get("/health", (_req, res) => res.json({ ok: true, service: "backend", storage: "development-memory", llmProvider: env.llmProvider }));
   app.get("/api/health", (_req, res) => res.json({ ok: true, service: "backend", storage: "development-memory", llmProvider: env.llmProvider }));
 
   /* ── Auth ── */

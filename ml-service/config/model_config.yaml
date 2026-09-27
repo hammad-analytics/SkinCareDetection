@@ -2,6 +2,6 @@ model_path: ../models/skin_model.keras
 architecture: efficientnet_b0_multimodal_rnn
 input_size: [224, 224]
 confidence_threshold: 0.55
-model_version: ham10000-cnn-rnn-academic-prototype
+model_version: ham10000-isic2019-cnn-rnn-v2.0
 last_conv_layer: top_conv
 text_sequence_length: 64

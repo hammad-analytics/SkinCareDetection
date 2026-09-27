@@ -16,6 +16,7 @@ app.use(cors({ origin: env.frontendOrigin, credentials: true }));
 app.use(express.json({ limit: "1mb" }));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 250 }));
 
+app.get("/health", (_req, res) => res.json({ ok: true, service: "backend" }));
 app.get("/api/health", (_req, res) => res.json({ ok: true, service: "backend" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/scans", scanRoutes);
