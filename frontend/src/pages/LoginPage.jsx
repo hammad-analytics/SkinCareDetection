@@ -21,6 +21,7 @@ export default function LoginPage() {
   const [forgotSuccess, setForgotSuccess] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [demoOtp, setDemoOtp] = useState("");
 
   const set = (key, val) => setForm({ ...form, [key]: val });
 
@@ -52,6 +53,7 @@ export default function LoginPage() {
     setForgotForm({ email: form.email || "", otp: "", newPassword: "", confirmPassword: "" });
     setForgotError("");
     setForgotSuccess("");
+    setDemoOtp("");
   };
 
   const closeForgotPassword = () => {
@@ -59,6 +61,7 @@ export default function LoginPage() {
     setForgotStep(1);
     setForgotError("");
     setForgotSuccess("");
+    setDemoOtp("");
   };
 
   // Step 1: Request 6-digit OTP
@@ -71,7 +74,14 @@ export default function LoginPage() {
       const { data } = await api.post("/auth/forgot-password/send-otp", {
         email: forgotForm.email.trim()
       });
-      setForgotSuccess(data.message || "OTP code sent successfully to your email.");
+      if (data.demoOtp) {
+        setDemoOtp(data.demoOtp);
+        setForgotForm((prev) => ({ ...prev, otp: data.demoOtp }));
+        setForgotSuccess(data.message || "Demo Mode: Verification OTP generated.");
+      } else {
+        setDemoOtp("");
+        setForgotSuccess(data.message || "OTP code sent successfully to your email.");
+      }
       setForgotStep(2);
     } catch (err) {
       setForgotError(err.response?.data?.error?.message || "Failed to send OTP. Please check your email address.");
@@ -356,10 +366,34 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {forgotSuccess && (
-                  <div className="mb-4 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 p-3 text-xs text-emerald-800 dark:text-emerald-300">
-                    ✉️ {forgotSuccess}
+                {demoOtp ? (
+                  <div className="mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/60 p-3.5 text-xs text-amber-900 dark:text-amber-200 shadow-xs">
+                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                      <span className="font-semibold flex items-center gap-1.5 text-amber-950 dark:text-amber-100">
+                        🔑 Demo / Viva Mode Active
+                      </span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300 bg-amber-200/80 dark:bg-amber-900/60 px-2 py-0.5 rounded-full">
+                        Auto-Filled
+                      </span>
+                    </div>
+                    <p className="text-[12px] text-amber-800/90 dark:text-amber-300/90 leading-relaxed mb-2">
+                      Live SMTP email service is currently in offline/demo mode. Your 6-digit verification code is:
+                    </p>
+                    <div className="flex items-center justify-between bg-white dark:bg-slate-900/80 rounded-lg px-3 py-2 border border-amber-200 dark:border-amber-900/50">
+                      <span className="font-mono text-base font-extrabold tracking-widest text-teal-700 dark:text-teal-400">
+                        {demoOtp}
+                      </span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                        Auto-populated below
+                      </span>
+                    </div>
                   </div>
+                ) : (
+                  forgotSuccess && (
+                    <div className="mb-4 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 p-3 text-xs text-emerald-800 dark:text-emerald-300">
+                      ✉️ {forgotSuccess}
+                    </div>
+                  )
                 )}
 
                 {forgotError && (

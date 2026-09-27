@@ -241,8 +241,9 @@ export function createMemoryApp() {
     const result = await sendOTP(cleanEmail);
     res.json({
       ok: true,
-      message: result.message || "OTP sent to your email address.",
+      message: result.fallback ? "Demo Mode: Verification OTP generated." : "OTP sent to your email address.",
       fallback: result.fallback || false,
+      demoOtp: result.fallback ? result.otp : undefined
     });
   });
 

@@ -61,7 +61,7 @@ export async function sendOTP(email) {
     console.log(`║  OTP: ${otp}`);
     console.log(`║  Expires in 5 minutes`);
     console.log(`╚══════════════════════════════════════════╝\n`);
-    return { success: true, message: "OTP sent (check server console — SMTP not configured)", fallback: true };
+    return { success: true, message: "Verification OTP generated.", fallback: true, otp };
   }
 
   try {
@@ -98,7 +98,7 @@ export async function sendOTP(email) {
     console.log(`║  OTP: ${otp}`);
     console.log(`║  (Email sending failed — using console)`);
     console.log(`╚══════════════════════════════════════════╝\n`);
-    return { success: true, message: "OTP generated (email sending failed — check server console)", fallback: true };
+    return { success: true, message: "OTP generated.", fallback: true, otp };
   }
 }
 

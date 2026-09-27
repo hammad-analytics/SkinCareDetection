@@ -67,8 +67,9 @@ export async function sendResetOTP(req, res, next) {
     const result = await sendOTP(cleanEmail);
     res.json({
       ok: true,
-      message: result.message || "OTP sent to your email address.",
+      message: result.fallback ? "Demo Mode: Verification OTP generated." : "OTP sent to your email address.",
       fallback: result.fallback || false,
+      demoOtp: result.fallback ? result.otp : undefined
     });
   } catch (error) {
     next(error);
