@@ -125,7 +125,7 @@ export default function NewScanPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-64px)] bg-slate-50">
+    <div className="flex flex-col min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-[#0b0f19] text-slate-800 dark:text-slate-100 transition-colors">
       <div className="mx-auto w-full max-w-3xl px-4 py-8 flex-1">
         {/* Step Indicator */}
         <div className="flex items-center justify-center gap-2 mb-8">
@@ -133,17 +133,17 @@ export default function NewScanPage() {
             <React.Fragment key={label}>
               <div className="flex items-center gap-2">
                 <div className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-colors ${
-                  i <= step ? "bg-teal-600 text-white shadow-xs" : "bg-slate-200 text-slate-500"
+                  i <= step ? "bg-teal-600 text-white shadow-xs" : "bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
                 }`}>{i + 1}</div>
-                <span className={`text-xs font-semibold hidden sm:inline ${i <= step ? "text-teal-700" : "text-slate-400"}`}>{label}</span>
+                <span className={`text-xs font-semibold hidden sm:inline ${i <= step ? "text-teal-700 dark:text-teal-400" : "text-slate-400 dark:text-slate-500"}`}>{label}</span>
               </div>
-              {i < STEPS.length - 1 && <div className={`h-0.5 w-8 sm:w-16 ${i < step ? "bg-teal-500" : "bg-slate-200"}`} />}
+              {i < STEPS.length - 1 && <div className={`h-0.5 w-8 sm:w-16 ${i < step ? "bg-teal-500" : "bg-slate-200 dark:bg-slate-800"}`} />}
             </React.Fragment>
           ))}
         </div>
 
         {error && (
-          <div className="mb-6 flex items-start gap-2.5 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-700 animate-fadeIn">
+          <div className="mb-6 flex items-start gap-2.5 rounded-xl bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/50 p-4 text-sm text-red-700 dark:text-red-300 animate-fadeIn">
             <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" /> {error}
           </div>
         )}
@@ -260,20 +260,20 @@ export default function NewScanPage() {
 
         {/* Step 2: Processing Animation */}
         {step === 2 && loading && (
-          <div className="flex flex-col items-center justify-center py-20 animate-fadeIn bg-white rounded-2xl border border-slate-200 p-8 shadow-xs">
+          <div className="flex flex-col items-center justify-center py-20 animate-fadeIn bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 shadow-xs">
             <div className="relative">
-              <div className="h-20 w-20 animate-spin rounded-full border-4 border-teal-200 border-t-teal-600" />
+              <div className="h-20 w-20 animate-spin rounded-full border-4 border-teal-200 dark:border-teal-900 border-t-teal-600 dark:border-t-teal-400" />
               <div className="absolute inset-0 flex items-center justify-center">
-                <Activity className="h-8 w-8 text-teal-600 animate-pulse-soft" />
+                <Activity className="h-8 w-8 text-teal-600 dark:text-teal-400 animate-pulse-soft" />
               </div>
             </div>
-            <h3 className="mt-6 text-lg font-bold text-slate-800">Analyzing Your Skin Image</h3>
-            <p className="mt-1.5 text-xs text-slate-500 font-medium animate-pulse-soft">{stage || "Processing..."}</p>
+            <h3 className="mt-6 text-lg font-bold text-slate-800 dark:text-slate-100">Analyzing Your Skin Image</h3>
+            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium animate-pulse-soft">{stage || "Processing..."}</p>
 
             <div className="mt-6 w-full max-w-xs space-y-2">
               {["Image Quality & CLAHE Auto-Enhancement", "Multimodal Disease Classification", "Grad-CAM Heatmap Generation", "Clinical & OTC Skincare Guidance"].map((s, i) => (
-                <div key={s} className="flex items-center gap-2 text-xs text-slate-400">
-                  <div className={`h-2 w-2 rounded-full ${i < 2 ? "bg-teal-500" : "bg-slate-300"} animate-pulse-soft`} />
+                <div key={s} className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500">
+                  <div className={`h-2 w-2 rounded-full ${i < 2 ? "bg-teal-500" : "bg-slate-300 dark:bg-slate-700"} animate-pulse-soft`} />
                   <span>{s}</span>
                 </div>
               ))}

@@ -13,11 +13,12 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Forgot Password state
+  // Forgot Password state (Email OTP flow)
   const [forgotOpen, setForgotOpen] = useState(false);
-  const [forgotStep, setForgotStep] = useState(1); // 1=email+name, 2=new password, 3=success
-  const [forgotForm, setForgotForm] = useState({ email: "", name: "", newPassword: "", confirmPassword: "" });
+  const [forgotStep, setForgotStep] = useState(1); // 1=enter email, 2=enter otp, 3=new password, 4=success
+  const [forgotForm, setForgotForm] = useState({ email: "", otp: "", newPassword: "", confirmPassword: "" });
   const [forgotError, setForgotError] = useState("");
+  const [forgotSuccess, setForgotSuccess] = useState("");
   const [forgotLoading, setForgotLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
@@ -44,40 +45,66 @@ export default function LoginPage() {
     }
   };
 
-  // Forgot Password handlers
+  // Forgot Password handlers (OTP Flow)
   const openForgotPassword = () => {
     setForgotOpen(true);
     setForgotStep(1);
-    setForgotForm({ email: form.email || "", name: "", newPassword: "", confirmPassword: "" });
+    setForgotForm({ email: form.email || "", otp: "", newPassword: "", confirmPassword: "" });
     setForgotError("");
+    setForgotSuccess("");
   };
 
   const closeForgotPassword = () => {
     setForgotOpen(false);
     setForgotStep(1);
     setForgotError("");
+    setForgotSuccess("");
   };
 
-  const handleForgotVerify = async () => {
+  // Step 1: Request 6-digit OTP
+  const handleSendOTP = async () => {
     setForgotError("");
-    if (!forgotForm.email.trim()) { setForgotError("Please enter your email address."); return; }
-    if (!forgotForm.name.trim()) { setForgotError("Please enter your registered full name for verification."); return; }
+    setForgotSuccess("");
+    if (!forgotForm.email.trim()) { setForgotError("Please enter your registered email address."); return; }
     setForgotLoading(true);
     try {
-      const { data } = await api.post("/auth/forgot-password/verify", {
-        email: forgotForm.email.trim(),
-        name: forgotForm.name.trim()
+      const { data } = await api.post("/auth/forgot-password/send-otp", {
+        email: forgotForm.email.trim()
       });
-      if (data.verified) {
-        setForgotStep(2);
-      }
+      setForgotSuccess(data.message || "OTP code sent successfully to your email.");
+      setForgotStep(2);
     } catch (err) {
-      setForgotError(err.response?.data?.error?.message || "Verification failed. Check your email and name.");
+      setForgotError(err.response?.data?.error?.message || "Failed to send OTP. Please check your email address.");
     } finally {
       setForgotLoading(false);
     }
   };
 
+  // Step 2: Verify 6-digit OTP
+  const handleVerifyOTP = async () => {
+    setForgotError("");
+    if (!forgotForm.otp.trim() || forgotForm.otp.trim().length !== 6) {
+      setForgotError("Please enter the 6-digit numeric OTP code.");
+      return;
+    }
+    setForgotLoading(true);
+    try {
+      const { data } = await api.post("/auth/forgot-password/verify-otp", {
+        email: forgotForm.email.trim(),
+        otp: forgotForm.otp.trim()
+      });
+      if (data.verified) {
+        setForgotStep(3);
+        setForgotSuccess("OTP verified successfully! Please enter your new password.");
+      }
+    } catch (err) {
+      setForgotError(err.response?.data?.error?.message || "Invalid or expired OTP. Please check and try again.");
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  // Step 3: Reset password
   const handleForgotReset = async () => {
     setForgotError("");
     if (forgotForm.newPassword.length < 6) { setForgotError("Password must be at least 6 characters."); return; }
@@ -86,10 +113,9 @@ export default function LoginPage() {
     try {
       await api.post("/auth/forgot-password/reset", {
         email: forgotForm.email.trim(),
-        name: forgotForm.name.trim(),
         newPassword: forgotForm.newPassword
       });
-      setForgotStep(3);
+      setForgotStep(4);
     } catch (err) {
       setForgotError(err.response?.data?.error?.message || "Password reset failed. Please try again.");
     } finally {
@@ -259,100 +285,157 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ═══ Forgot Password Modal ═══ */}
+      {/* ═══ Forgot Password Modal (Secure OTP Flow) ═══ */}
       {forgotOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
+          <div className="relative w-full max-w-md rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl p-6 transition-colors">
             {/* Close */}
             <button
               onClick={closeForgotPassword}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
             >
               <X className="h-5 w-5" />
             </button>
 
-            {/* Step 1: Verify Identity */}
+            {/* Step 1: Enter Email for OTP */}
             {forgotStep === 1 && (
               <div className="animate-fadeIn">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center">
-                    <KeyRound className="h-5 w-5 text-teal-600" />
+                  <div className="h-10 w-10 rounded-full bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center">
+                    <KeyRound className="h-5 w-5 text-teal-600 dark:text-teal-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-800">Forgot Password</h3>
-                    <p className="text-xs text-slate-500">Verify your identity to reset password</p>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Reset Password via OTP</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Step 1 of 3: Enter your registered email</p>
                   </div>
                 </div>
 
                 {forgotError && (
-                  <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+                  <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 p-3 text-sm text-red-700 dark:text-red-300">
                     {forgotError}
                   </div>
                 )}
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Registered Email</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Registered Email Address</label>
                     <input
-                      className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                      className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-3 text-sm transition-all focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-hidden shadow-xs"
                       type="email"
-                      placeholder="Enter your registered email"
+                      placeholder="you@example.com"
                       value={forgotForm.email}
                       onChange={(e) => setForgotForm({ ...forgotForm, email: e.target.value })}
+                      onKeyDown={(e) => e.key === "Enter" && handleSendOTP()}
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Registered Full Name</label>
-                    <input
-                      className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
-                      type="text"
-                      placeholder="Enter the name you used during sign up"
-                      value={forgotForm.name}
-                      onChange={(e) => setForgotForm({ ...forgotForm, name: e.target.value })}
-                    />
-                  </div>
-                  <p className="text-xs text-slate-400">We'll verify your email and name match our records.</p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500">
+                    🔒 A secure 6-digit one-time verification code will be sent to your email.
+                  </p>
                   <button
-                    onClick={handleForgotVerify}
+                    onClick={handleSendOTP}
                     disabled={forgotLoading}
-                    className="w-full flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:bg-slate-400 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-md hover:bg-teal-700 disabled:bg-slate-400 cursor-pointer transition-all"
                   >
                     {forgotLoading ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : <ArrowRight className="h-4 w-4" />}
-                    {forgotLoading ? "Verifying..." : "Verify Identity"}
+                    {forgotLoading ? "Sending OTP..." : "Send Verification OTP"}
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Step 2: Enter New Password */}
+            {/* Step 2: Enter 6-digit OTP */}
             {forgotStep === 2 && (
               <div className="animate-fadeIn">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center">
-                    <KeyRound className="h-5 w-5 text-teal-600" />
+                  <div className="h-10 w-10 rounded-full bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center">
+                    <KeyRound className="h-5 w-5 text-teal-600 dark:text-teal-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-800">Reset Password</h3>
-                    <p className="text-xs text-slate-500">Identity verified! Set your new password</p>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Enter Verification Code</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Step 2 of 3: Check your email inbox</p>
                   </div>
                 </div>
 
+                {forgotSuccess && (
+                  <div className="mb-4 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 p-3 text-xs text-emerald-800 dark:text-emerald-300">
+                    ✉️ {forgotSuccess}
+                  </div>
+                )}
+
                 {forgotError && (
-                  <div className="mb-4 rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700">
+                  <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 p-3 text-sm text-red-700 dark:text-red-300">
                     {forgotError}
                   </div>
                 )}
 
-                <div className="mb-4 rounded-lg bg-green-50 border border-green-200 p-3 text-sm text-green-700">
-                  ✅ Identity verified for <strong>{forgotForm.email}</strong>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">6-Digit OTP Code</label>
+                    <input
+                      className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-3 text-center text-2xl font-mono tracking-widest font-bold focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-hidden shadow-xs"
+                      type="text"
+                      maxLength={6}
+                      placeholder="••••••"
+                      value={forgotForm.otp}
+                      onChange={(e) => setForgotForm({ ...forgotForm, otp: e.target.value.replace(/\D/g, "") })}
+                      onKeyDown={(e) => e.key === "Enter" && handleVerifyOTP()}
+                      autoFocus
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400 dark:text-slate-500">Valid for 5 minutes</span>
+                    <button
+                      type="button"
+                      onClick={handleSendOTP}
+                      disabled={forgotLoading}
+                      className="font-medium text-teal-600 dark:text-teal-400 hover:underline cursor-pointer"
+                    >
+                      Resend Code
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={handleVerifyOTP}
+                    disabled={forgotLoading || forgotForm.otp.length !== 6}
+                    className="w-full flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-md hover:bg-teal-700 disabled:bg-slate-400 cursor-pointer transition-all"
+                  >
+                    {forgotLoading ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : <CheckCircle className="h-4 w-4" />}
+                    {forgotLoading ? "Verifying..." : "Verify Code"}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Enter New Password */}
+            {forgotStep === 3 && (
+              <div className="animate-fadeIn">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="h-10 w-10 rounded-full bg-teal-100 dark:bg-teal-900/40 flex items-center justify-center">
+                    <KeyRound className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">Set New Password</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Step 3 of 3: Identity verified</p>
+                  </div>
+                </div>
+
+                {forgotError && (
+                  <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 p-3 text-sm text-red-700 dark:text-red-300">
+                    {forgotError}
+                  </div>
+                )}
+
+                <div className="mb-4 rounded-lg bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800/50 p-3 text-xs text-green-700 dark:text-green-300">
+                  ✅ OTP Verified for <strong>{forgotForm.email}</strong>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">New Password</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">New Password</label>
                     <div className="relative">
                       <input
-                        className="w-full rounded-lg border border-slate-300 px-4 py-3 pr-12 text-sm transition-colors focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                        className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-3 pr-12 text-sm focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-hidden shadow-xs"
                         type={showForgotPassword ? "text" : "password"}
                         placeholder="Min. 6 characters"
                         value={forgotForm.newPassword}
@@ -361,48 +444,49 @@ export default function LoginPage() {
                       <button
                         type="button"
                         onClick={() => setShowForgotPassword(!showForgotPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
                       >
                         {showForgotPassword ? <EyeOff className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
                       </button>
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Confirm New Password</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Confirm New Password</label>
                     <input
-                      className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                      className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-hidden shadow-xs"
                       type="password"
                       placeholder="Re-enter new password"
                       value={forgotForm.confirmPassword}
                       onChange={(e) => setForgotForm({ ...forgotForm, confirmPassword: e.target.value })}
+                      onKeyDown={(e) => e.key === "Enter" && handleForgotReset()}
                     />
                   </div>
                   <button
                     onClick={handleForgotReset}
                     disabled={forgotLoading}
-                    className="w-full flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:bg-slate-400 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-md hover:bg-teal-700 disabled:bg-slate-400 cursor-pointer transition-all"
                   >
                     {forgotLoading ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : <KeyRound className="h-4 w-4" />}
-                    {forgotLoading ? "Resetting..." : "Reset Password"}
+                    {forgotLoading ? "Resetting..." : "Save & Reset Password"}
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Step 3: Success */}
-            {forgotStep === 3 && (
+            {/* Step 4: Success */}
+            {forgotStep === 4 && (
               <div className="animate-fadeIn text-center py-4">
-                <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="h-8 w-8 text-green-600" />
+                <div className="h-16 w-16 rounded-full bg-green-100 dark:bg-green-950/50 border border-green-200 dark:border-green-800 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">Password Reset Successful!</h3>
-                <p className="text-sm text-slate-500 mb-6">Your password has been updated. You can now sign in with your new password.</p>
+                <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">Password Reset Successful!</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">Your password has been updated securely. You can now sign in with your new password.</p>
                 <button
                   onClick={() => {
                     closeForgotPassword();
                     setForm({ ...form, email: forgotForm.email, password: "" });
                   }}
-                  className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 transition-colors"
+                  className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-teal-700 transition-all cursor-pointer"
                 >
                   <ArrowRight className="h-4 w-4" />
                   Sign In Now

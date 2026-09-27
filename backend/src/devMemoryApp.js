@@ -10,6 +10,7 @@ import { mlService } from "./services/mlService.js";
 import { assessRisk } from "./services/riskService.js";
 import { filterAssistantText } from "./services/safetyService.js";
 import { generateAssistantResponse } from "./services/llmService.js";
+import { sendOTP, verifyOTP, isOTPVerified, clearOTP } from "./services/otpService.js";
 import path from "path";
 import fs from "fs";
 
@@ -225,37 +226,59 @@ export function createMemoryApp() {
 
   app.post("/api/auth/logout", (_req, res) => res.json({ ok: true }));
 
-  /* ── Forgot Password - Verify Identity ── */
-  app.post("/api/auth/forgot-password/verify", (req, res) => {
-    const { email, name } = req.body;
-    if (!email || !name) {
-      return res.status(400).json({ error: { message: "Email and name are required." } });
+  /* ── Forgot Password - Step 1: Send OTP to User's Email ── */
+  app.post("/api/auth/forgot-password/send-otp", async (req, res) => {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: { message: "Email address is required." } });
     }
-    const user = users.find((u) => u.email === email.toLowerCase().trim());
+    const cleanEmail = email.toLowerCase().trim();
+    const user = users.find((u) => u.email === cleanEmail);
     if (!user) {
-      return res.status(404).json({ error: { message: "No account found with this email address." } });
+      return res.status(404).json({ error: { message: "No registered account found with this email." } });
     }
-    if (user.name.toLowerCase().trim() !== name.toLowerCase().trim()) {
-      return res.status(403).json({ error: { message: "The name does not match our records for this email." } });
-    }
-    res.json({ verified: true, message: "Identity verified successfully." });
+    const result = await sendOTP(cleanEmail);
+    res.json({
+      ok: true,
+      message: result.message || "OTP sent to your email address.",
+      fallback: result.fallback || false,
+    });
   });
 
-  /* ── Forgot Password - Reset Password ── */
+  /* ── Forgot Password - Step 2: Verify OTP Code ── */
+  app.post("/api/auth/forgot-password/verify-otp", (req, res) => {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).json({ error: { message: "Email and 6-digit OTP code are required." } });
+    }
+    const cleanEmail = email.toLowerCase().trim();
+    const result = verifyOTP(cleanEmail, otp);
+    if (!result.valid) {
+      return res.status(400).json({ error: { message: result.message } });
+    }
+    res.json({ verified: true, message: result.message });
+  });
+
+  /* ── Forgot Password - Step 3: Reset Password ── */
   app.post("/api/auth/forgot-password/reset", async (req, res) => {
-    const { email, name, newPassword } = req.body;
-    if (!email || !name || !newPassword) {
-      return res.status(400).json({ error: { message: "Email, name, and new password are required." } });
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) {
+      return res.status(400).json({ error: { message: "Email and new password are required." } });
     }
     if (newPassword.length < 6) {
       return res.status(400).json({ error: { message: "Password must be at least 6 characters." } });
     }
-    const user = users.find((u) => u.email === email.toLowerCase().trim());
-    if (!user || user.name.toLowerCase().trim() !== name.toLowerCase().trim()) {
-      return res.status(403).json({ error: { message: "Verification failed. Please try again." } });
+    const cleanEmail = email.toLowerCase().trim();
+    if (!isOTPVerified(cleanEmail)) {
+      return res.status(403).json({ error: { message: "Security verification required. Please verify the OTP sent to your email first." } });
+    }
+    const user = users.find((u) => u.email === cleanEmail);
+    if (!user) {
+      return res.status(404).json({ error: { message: "User account not found." } });
     }
     user.passwordHash = await bcrypt.hash(newPassword, 12);
     saveJson(USERS_FILE, users);
+    clearOTP(cleanEmail);
     res.json({ ok: true, message: "Password has been reset successfully." });
   });
 

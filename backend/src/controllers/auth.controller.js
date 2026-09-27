@@ -4,6 +4,7 @@ import { z } from "zod";
 import { User } from "../models/User.js";
 import { env } from "../config/env.js";
 import { HttpError } from "../utils/httpError.js";
+import { sendOTP, verifyOTP, isOTPVerified, clearOTP } from "../services/otpService.js";
 
 const registerSchema = z.object({ name: z.string().min(2), email: z.string().email(), password: z.string().min(8) });
 const loginSchema = z.object({ email: z.string().email(), password: z.string().min(1) });
@@ -48,43 +49,75 @@ export async function listUsers(_req, res, next) {
   }
 }
 
-// Forgot Password - Step 1: Verify email + name match
-export async function forgotPasswordVerify(req, res, next) {
+// ─── Secure OTP-Based Forgot Password ───
+
+// Step 1: Send OTP to User's Email
+export async function sendResetOTP(req, res, next) {
   try {
-    const { email, name } = req.body;
-    if (!email || !name) {
-      return res.status(400).json({ error: { message: "Email and name are required." } });
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: { message: "Email address is required." } });
     }
-    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    const cleanEmail = email.toLowerCase().trim();
+    const user = await User.findOne({ email: cleanEmail });
     if (!user) {
-      return res.status(404).json({ error: { message: "No account found with this email address." } });
+      return res.status(404).json({ error: { message: "No registered account found with this email." } });
     }
-    // Case-insensitive name comparison
-    if (user.name.toLowerCase().trim() !== name.toLowerCase().trim()) {
-      return res.status(403).json({ error: { message: "The name does not match our records for this email." } });
-    }
-    res.json({ verified: true, message: "Identity verified successfully." });
+
+    const result = await sendOTP(cleanEmail);
+    res.json({
+      ok: true,
+      message: result.message || "OTP sent to your email address.",
+      fallback: result.fallback || false,
+    });
   } catch (error) {
     next(error);
   }
 }
 
-// Forgot Password - Step 2: Reset password
+// Step 2: Verify OTP
+export async function verifyResetOTP(req, res, next) {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).json({ error: { message: "Email and 6-digit OTP code are required." } });
+    }
+    const cleanEmail = email.toLowerCase().trim();
+    const result = verifyOTP(cleanEmail, otp);
+    if (!result.valid) {
+      return res.status(400).json({ error: { message: result.message } });
+    }
+    res.json({ verified: true, message: result.message });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Step 3: Reset Password (requires verified OTP)
 export async function forgotPasswordReset(req, res, next) {
   try {
-    const { email, name, newPassword } = req.body;
-    if (!email || !name || !newPassword) {
-      return res.status(400).json({ error: { message: "Email, name, and new password are required." } });
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) {
+      return res.status(400).json({ error: { message: "Email and new password are required." } });
     }
     if (newPassword.length < 6) {
       return res.status(400).json({ error: { message: "Password must be at least 6 characters." } });
     }
-    const user = await User.findOne({ email: email.toLowerCase().trim() });
-    if (!user || user.name.toLowerCase().trim() !== name.toLowerCase().trim()) {
-      return res.status(403).json({ error: { message: "Verification failed. Please try again." } });
+
+    const cleanEmail = email.toLowerCase().trim();
+    if (!isOTPVerified(cleanEmail)) {
+      return res.status(403).json({ error: { message: "Security verification required. Please verify the OTP sent to your email first." } });
     }
+
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user) {
+      return res.status(404).json({ error: { message: "User account not found." } });
+    }
+
     user.passwordHash = await bcrypt.hash(newPassword, 12);
     await user.save();
+    clearOTP(cleanEmail);
+
     res.json({ ok: true, message: "Password has been reset successfully." });
   } catch (error) {
     next(error);
