@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DermAI — B.Tech Major Project Technical Report & Viva Guide</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-light: #ccfbf1;
+      --secondary: #0f172a;
+      --accent: #0284c7;
+      --slate-50: #f8fafc;
+      --slate-100: #f1f5f9;
+      --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1;
+      --slate-600: #475569;
+      --slate-700: #334155;
+      --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --red-600: #dc2626;
+      --red-50: #fef2f2;
+      --amber-600: #d97706;
+      --amber-50: #fffbeb;
+      --emerald-600: #059669;
+      --emerald-50: #ecfdf5;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--slate-800);
+      background: #ffffff;
+      line-height: 1.55;
+      font-size: 13px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 16mm 14mm 16mm 14mm;
+    }
+
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background: white;
+      }
+      .page-break {
+        page-break-after: always;
+        break-after: page;
+      }
+      .no-break {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+    }
+
+    .page {
+      padding-bottom: 24px;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+      color: white;
+      padding: 24px 28px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .header-tag {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: #5eead4;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .header-sub {
+      font-size: 13px;
+      color: #cbd5e1;
+      font-weight: 400;
+      max-width: 650px;
+      line-height: 1.4;
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .header-meta span strong {
+      color: #ffffff;
+    }
+
+    /* Section Styling */
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--secondary);
+      border-bottom: 2px solid var(--primary-light);
+      padding-bottom: 6px;
+      margin-top: 20px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h2 .sec-badge {
+      background: var(--primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+
+    h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+
+    p {
+      margin-bottom: 10px;
+      color: var(--slate-700);
+    }
+
+    /* Cards & Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--slate-200);
+      border-radius: 10px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    }
+
+    .card-primary {
+      border-left: 4px solid var(--primary);
+      background: #fafcfb;
+    }
+
+    .card-accent {
+      border-left: 4px solid var(--accent);
+      background: #f8fafc;
+    }
+
+    .card-warning {
+      border-left: 4px solid var(--amber-600);
+      background: #fffdfa;
+    }
+
+    .card-danger {
+      border-left: 4px solid var(--red-600);
+      background: #fffafa;
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--slate-900);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .badge-teal { background: #ccfbf1; color: #0f766e; }
+    .badge-blue { background: #e0f2fe; color: #0369a1; }
+    .badge-amber { background: #fef3c7; color: #b45309; }
+    .badge-red { background: #fee2e2; color: #b91c1c; }
+    .badge-green { background: #dcfce7; color: #15803d; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 16px 0;
+      font-size: 12px;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: var(--slate-800);
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid var(--slate-200);
+    }
+
+    td {
+      padding: 7px 10px;
+      border: 1px solid var(--slate-200);
+      color: var(--slate-700);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* Architecture Flow Box */
+    .arch-flow {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 10px;
+      margin: 14px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+      border: 1px solid #334155;
+    }
+
+    .arch-flow strong {
+      color: #38bdf8;
+    }
+
+    .arch-flow .highlight {
+      color: #2dd4bf;
+    }
+
+    /* Pros & Cons box */
+    .pros-cons-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 14px 0;
+    }
+
+    .pro-box {
+      border: 1px solid #bbf7d0;
+      background: #f0fdf4;
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .con-box {
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .box-heading {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pro-heading { color: #166534; }
+    .con-heading { color: #991b1b; }
+
+    ul.clean-list {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    ul.clean-list li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 7px;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    ul.clean-list li::before {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .pro-list li::before { content: "✓"; color: #16a34a; font-weight: bold; }
+    .con-list li::before { content: "⚠"; color: #dc2626; font-weight: bold; }
+    .bullet-list li::before { content: "•"; color: var(--primary); font-size: 16px; top: -2px; }
+
+    /* Q&A section */
+    .qa-card {
+      border: 1px solid var(--slate-200);
+      background: white;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .qa-q {
+      font-weight: 700;
+      color: var(--secondary);
+      font-size: 12.5px;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .qa-q span {
+      color: var(--primary);
+      font-size: 11px;
+      background: var(--primary-light);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+
+    .qa-a {
+      font-size: 12px;
+      color: var(--slate-600);
+      line-height: 1.45;
+      padding-left: 4px;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--slate-600);
+      margin-top: 24px;
+      padding-top: 12px;
+      border-top: 1px solid var(--slate-200);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== PAGE 1 ==================== -->
+  <div class="page">
+    <div class="header-banner">
+      <div class="header-tag">B.Tech CSE Major Project (2026–2027) • Technical Reference & Viva Guide</div>
+      <h1 class="header-title">DermAI: Multimodal Skin Disease Detection & Dermatological Consultation Platform</h1>
+      <p class="header-sub">
+        An end-to-end clinical assistive system combining deep learning computer vision (ResNet-50 / EfficientNet), Explainable AI (Grad-CAM heatmaps), and Multilingual RAG Conversational AI for early lesion screening.
+      </p>
+      <div class="header-meta">
+        <span><strong>Author:</strong> Mohd Hammad</span>
+        <span><strong>Domain:</strong> Deep Learning & Healthcare AI</span>
+        <span><strong>Datasets:</strong> HAM10000 + ISIC 2019</span>
+        <span><strong>Tech Stack:</strong> React + Node.js + FastAPI + PyTorch + Gemini</span>
+      </div>
+    </div>
+
+    <h2><span class="sec-badge">1</span> Project Problem Statement & Core Motivation (Kyun Banaya?)</h2>
+    <p>
+      Skin disease is one of the most common human illnesses globally, affecting over 900 million people at any given time. However, healthcare accessibility presents three severe bottlenecks:
+    </p>
+
+    <div class="grid-3">
+      <div class="card card-danger">
+        <div class="card-title">Critical Doctor Shortage</div>
+        <p style="font-size: 11.5px; margin: 0;">
+          In developing regions and Tier-2/3 cities, the dermatologist-to-population ratio is less than <strong>1 per 100,000 citizens</strong>. Patients travel hundreds of kilometers for routine skin consultations.
+        </p>
+      </div>
+
+      <div class="card card-warning">
+        <div class="card-title">Fatal Diagnostic Delays</div>
+        <p style="font-size: 11.5px; margin: 0;">
+          Malignant Melanoma caught in Stage 1 boasts a <strong>99% 5-year survival rate</strong>. When detected late after metastasis, survival plunges below <strong>30%</strong>. Early screening saves lives.
+        </p>
+      </div>
+
+      <div class="card card-primary">
+        <div class="card-title">Dangerous Self-Medication</div>
+        <p style="font-size: 11.5px; margin: 0;">
+          Patients search uncurated web forums and apply OTC steroid creams without knowing if a lesion is fungal, bacterial, or cancerous, causing irreversible tissue aggravation.
+        </p>
+      </div>
+    </div>
+
+    <h2><span class="sec-badge">2</span> High-Level Architecture Overview (Konsi Cheez Kaise Kaam Karti Hai?)</h2>
+    <p>
+      DermAI operates as a distributed <strong>Multimodal Microservices Architecture</strong> where each layer is decoupled for scalability, high throughput, and safety:
+    </p>
+
+    <div class="arch-flow">
+      ┌────────────────────────────────────────────────────────────────────────────────────────┐<br/>
+      │ <strong>1. CLIENT LAYER (React 18 + Vite + Tailwind CSS)</strong> [Port 5173]                            │<br/>
+      │    • Drag & Drop Image Upload • Real-time Grad-CAM Heatmap Slider Toggle               │<br/>
+      │    • Bilingual Chat UI (English & Hindi) • OTP-protected Password Reset & Doctor Map   │<br/>
+      └──────────────────────────────────────────┬─────────────────────────────────────────────┘<br/>
+                                                 │ HTTP / REST (JWT Auth Token)<br/>
+      ┌──────────────────────────────────────────▼─────────────────────────────────────────────┐<br/>
+      │ <strong>2. API GATEWAY & BUSINESS CORE (Node.js + Express.js)</strong> [Port 5000]                       │<br/>
+      │    • Rate Limiting & Helmet Security • BCrypt Password Hashing & 6-digit OTP Verification│<br/>
+      │    • Clinical Safety Filter Layer • Google Gemini Multilingual Conversational Routing  │<br/>
+      └─────────────────────┬────────────────────────────────────────────┬─────────────────────┘<br/>
+                            │ Multipart/Form-Data Image                   │ Coordinates Query<br/>
+      ┌─────────────────────▼─────────────────────────┐  ┌───────────────▼─────────────────────┐<br/>
+      │ <strong>3. DEEP LEARNING ENGINE (FastAPI + PyTorch)</strong>   │  │ <strong>4. GEOLOCATION DOCTOR FINDER</strong>        │<br/>
+      │    [Port 8000]                                │  │    • OpenStreetMap Nominatim API    │<br/>
+      │    • ResNet-50 / EfficientNet-B0 Backbone     │  │    • Overpass Dermatologist Query   │<br/>
+      │    • 7-Class HAM10000 + ISIC Probabilities    │  │    • Local Verified Doctor DB       │<br/>
+      │    • Grad-CAM Visual Heatmap Generation       │  └─────────────────────────────────────┘<br/>
+      └───────────────────────────────────────────────┘
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== PAGE 2 ==================== -->
+  <div class="page">
+    <h2><span class="sec-badge">3</span> Deep Dive: Core Components & Technical Rationale (Kyu Use Kiya?)</h2>
+
+    <div class="grid-2">
+      <!-- Component 1 -->
+      <div class="card card-primary no-break">
+        <div class="card-title">
+          <span>A. Deep Learning Vision Engine</span>
+          <span class="badge badge-teal">FastAPI + PyTorch</span>
+        </div>
+        <p style="font-size: 12px;"><strong>Kaise Kaam Karta Hai:</strong> Uploaded dermoscopic photo 224x224 RGB tensor mein convert hoti hai, ImageNet mean/std se normalize hoti hai, aur deep convolutional backbone se pass hoti hai. Final dense layer 7 disease classes ke softmax probability distribution calculate karti hai.</p>
+        <p style="font-size: 12px; margin: 0;"><strong>Kyu Use Kiya:</strong> Python/FastAPI Asynchronous C-based tensor operations support karta hai jo Node.js mein slow hote hain. PyTorch industry standard model training aur dynamic gradient computation facilitate karta hai.</p>
+      </div>
+
+      <!-- Component 2 -->
+      <div class="card card-accent no-break">
+        <div class="card-title">
+          <span>B. Explainable AI: Grad-CAM</span>
+          <span class="badge badge-blue">Visual Interpretability</span>
+        </div>
+        <p style="font-size: 12px;"><strong>Kaise Kaam Karta Hai:</strong> Target predicted class score ke gradients compute karta hai with respect to last convolutional feature maps (Layer4). In gradients ko spatial features se multiply karke 2D heatmap banta hai jo image ke key visual patterns ko highlight karta hai.</p>
+        <p style="font-size: 12px; margin: 0;"><strong>Kyu Use Kiya:</strong> AI medicine mein <em>"Black-Box"</em> models par doctors trust nahi karte. Grad-CAM prove karta hai ki AI ne actual skin lesion/pigment border dekhkar diagnose kiya hai, na ki ruler ya background hair dekhkar!</p>
+      </div>
+
+      <!-- Component 3 -->
+      <div class="card card-primary no-break">
+        <div class="card-title">
+          <span>C. Multilingual Conversational AI</span>
+          <span class="badge badge-teal">Gemini + Custom Safety</span>
+        </div>
+        <p style="font-size: 12px;"><strong>Kaise Kaam Karta Hai:</strong> Dynamic Language Matching system: Agar user English mein baat kare to English default rehti hai; agar user Hindi/Hinglish mein puche (e.g. <em>"kya yeh dhoop se hua hai?"</em>), to LLM automatically natural Hindi/Hinglish mein medical guidance deta hai.</p>
+        <p style="font-size: 12px; margin: 0;"><strong>Kyu Use Kiya:</strong> Bharat ke har patient ko English fluent nahi hoti. Bilingual conversational AI se rural aur semi-urban users bhi apni bhasha mein consultation le sakte hain bina kisi intimidation ke.</p>
+      </div>
+
+      <!-- Component 4 -->
+      <div class="card card-warning no-break">
+        <div class="card-title">
+          <span>D. Clinical Safety Guardrail Layer</span>
+          <span class="badge badge-amber">RAG + Zero-Hallucination</span>
+        </div>
+        <p style="font-size: 12px;"><strong>Kaise Kaam Karta Hai:</strong> Har response se pehle Regex aur Semantic Safety checks run hote hain. Agar LLM dangerous oral prescription drugs (jaise oral steroids, immunosuppressants, antibiotics) recommend kare, to filter block karke safe OTC hygiene aur dermatologist visit suggest karta hai.</p>
+        <p style="font-size: 12px; margin: 0;"><strong>Kyu Use Kiya:</strong> Medical ethics! Unverified prescription medicine patient ki jaan khatre mein daal sakti hai. AI ka kaam assist karna hai, certified doctor ki jagah lena nahi.</p>
+      </div>
+    </div>
+
+    <h2><span class="sec-badge">4</span> Datasets & The 7 Clinical Diagnostic Classes</h2>
+    <p>
+      DermAI ko <strong>2 globally recognized clinical benchmark datasets</strong> par train aur evaluate kiya gaya hai:
+    </p>
+
+    <div class="grid-2" style="margin-bottom: 8px;">
+      <div class="card" style="background: #f8fafc;">
+        <strong>1. HAM10000 Dataset:</strong> 10,015 dermatoscopic images (ViDIR Group, Austria & Queensland, Australia). Gold standard benchmark for pigmented skin lesion analysis.
+      </div>
+      <div class="card" style="background: #f8fafc;">
+        <strong>2. ISIC 2019 Challenge Dataset:</strong> 25,331 clinical images spanning broader demographic cohorts, skin tones, and rare dermatological pathologies.
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 14%;">Code</th>
+          <th style="width: 28%;">Condition Name</th>
+          <th style="width: 43%;">Clinical Description & Symptoms</th>
+          <th style="width: 15%;">Risk Tier</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color: #dc2626;">mel</strong></td>
+          <td><strong>Melanoma</strong></td>
+          <td>Most dangerous malignant skin cancer arising from melanocytes; irregular borders, color variation, fast metastasis.</td>
+          <td><span class="badge badge-red">High Risk</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #d97706;">bcc</strong></td>
+          <td><strong>Basal Cell Carcinoma</strong></td>
+          <td>Most common skin cancer; pearly, waxy bump or scar-like lesion resulting from chronic cumulative UV exposure.</td>
+          <td><span class="badge badge-amber">Moderate-High</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #d97706;">akiec</strong></td>
+          <td><strong>Actinic Keratoses</strong></td>
+          <td>Precancerous scaly/crusty sun patches; small percentage progresses to Squamous Cell Carcinoma if untreated.</td>
+          <td><span class="badge badge-amber">Precancerous</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #0284c7;">bkl</strong></td>
+          <td><strong>Benign Keratosis</strong></td>
+          <td>Non-cancerous seborrheic keratoses, solar lentigines, or lichenoid keratoses commonly seen in aging skin.</td>
+          <td><span class="badge badge-blue">Benign / Low</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #059669;">nv</strong></td>
+          <td><strong>Melanocytic Nevi</strong></td>
+          <td>Common benign moles and birthmarks; uniform coloration with symmetrical borders.</td>
+          <td><span class="badge badge-green">Benign / Normal</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #0284c7;">vasc</strong></td>
+          <td><strong>Vascular Lesions</strong></td>
+          <td>Cherry angiomas, pyogenic granulomas, and vascular malformations originating from blood vessels.</td>
+          <td><span class="badge badge-blue">Benign / Low</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #059669;">df</strong></td>
+          <td><strong>Dermatofibroma</strong></td>
+          <td>Benign fibrous skin nodules, often developing on lower legs following minor trauma or insect bites.</td>
+          <td><span class="badge badge-green">Benign / Low</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== PAGE 3 ==================== -->
+  <div class="page">
+    <h2><span class="sec-badge">5</span> Project Fayde vs Nuksaan (Comprehensive Advantages & Limitations)</h2>
+    <p>
+      Ek strong engineering evaluation mein model ke strengths aur genuine constraints dono ka clear understanding hona chahiye:
+    </p>
+
+    <div class="pros-cons-grid">
+      <!-- FAYDE / ADVANTAGES -->
+      <div class="pro-box no-break">
+        <div class="box-heading pro-heading">
+          <span>🌟 Fayde (Key Advantages & Innovations)</span>
+        </div>
+        <ul class="clean-list pro-list">
+          <li><strong>Ultra-Fast Early Screening (<2 sec):</strong> Patient ko doctor ke appointment ke liye hafte wait nahi karna padta; turant risk level ka primary estimate mil jata hai.</li>
+          <li><strong>Explainable AI Trust (Grad-CAM):</strong> Visual heatmaps se doctor aur examiner dono dekh sakte hain ki prediction random guess nahi, balki specific pathological regions par based hai.</li>
+          <li><strong>Bilingual Accessibility (Hindi + English):</strong> Dynamic language adaptation se Hindi/Hinglish bolne wale aam log bhi apni zubaan mein natural conversation kar sakte hain.</li>
+          <li><strong>Strict Safety Guardrails:</strong> Self-medication ka sabse bada khatra khatam ho jata hai kyunki system kisi bhi dangerous prescription steroid ko prescribe nahi karta.</li>
+          <li><strong>Seamless Offline Viva / Presentation Mode:</strong> Internet SMTP ya SMS gateway fail hone par bhi system 6-digit verification code screen par auto-fill kar deta hai, ensuring 100% smooth viva demo.</li>
+          <li><strong>End-to-End Patient Journey:</strong> Bas prediction dekar chhodta nahi—nearby certified dermatologists dhoondh kar Google Maps direction deta hai.</li>
+        </ul>
+      </div>
+
+      <!-- NUKSAAN / LIMITATIONS -->
+      <div class="con-box no-break">
+        <div class="box-heading con-heading">
+          <span>⚠️ Nuksaan & Limitations (Technical Constraints)</span>
+        </div>
+        <ul class="clean-list con-list">
+          <li><strong>Not a Certified Diagnostic Replacement:</strong> DermAI ek decision-support assistive tool hai. Final diagnosis ke liye physical dermatoscope aur biopsy/histopathology anivarya hai.</li>
+          <li><strong>Image Quality & Lighting Dependency:</strong> Smartphone camera se khinchee hui blurry, low-light, ya flash-glare wali photos par prediction confidence drop ho sakti hai.</li>
+          <li><strong>Fitzpatrick Skin Tone Imbalance:</strong> Public datasets (HAM10000) mein Type I-III (fair skin) ka proportion zyada hai aur Type V-VI (darker skin) kam hai, jisse domain shift ho sakta hai.</li>
+          <li><strong>Telecom SMS Gateway Costs:</strong> Real SMS phone par bhejne ke liye TRAI DLT commercial registration aur paid API credits lagte hain (isliye Email SMTP + On-Screen Demo fallback use kiya gaya).</li>
+          <li><strong>Edge-Case Overlaps:</strong> Early-stage Melanoma aur atypical Nevi (moles) visually 90% identical lagte hain, jahan model occasionally higher uncertainty flag karta hai.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2><span class="sec-badge">6</span> Security & Authentication Architecture</h2>
+    <div class="grid-3">
+      <div class="card card-primary">
+        <div class="card-title">BCrypt Password Hashing</div>
+        <p style="font-size: 11.5px; margin: 0;">
+          User passwords database mein plaintext save nahi hote. 12-round salt work factor ke sath cryptographically hash hote hain, securing against rainbow-table attacks.
+        </p>
+      </div>
+
+      <div class="card card-accent">
+        <div class="card-title">Stateless JWT Auth</div>
+        <p style="font-size: 11.5px; margin: 0;">
+          Client authentication JSON Web Tokens (JWT) se manage hoti hai jo 7-day validity ke sath secure headers mein travel karti hai, reducing database lookups.
+        </p>
+      </div>
+
+      <div class="card card-warning">
+        <div class="card-title">6-Digit Expiring OTP Flow</div>
+        <p style="font-size: 11.5px; margin: 0;">
+          Password reset ke liye crypto-secure random 6-digit OTP generate hota hai jo 5-minute memory store mein expire hota hai, brute-force security ke sath.
+        </p>
+      </div>
+    </div>
+
+    <h2><span class="sec-badge">7</span> Doctor Finder Integration (OpenStreetMap & Nominatim)</h2>
+    <p>
+      Patient ko AI risk assessment milne ke baad real medical consultation dilana sabse critical step hai:
+    </p>
+    <ul class="clean-list bullet-list">
+      <li><strong>Reverse Geocoding:</strong> User ke browser location (Latitude/Longitude) ko OpenStreetMap <em>Nominatim API</em> se clean city/area name mein convert kiya jata hai.</li>
+      <li><strong>Overpass API Query:</strong> Nearby registered dermatologists, skin clinics, aur hospitals ko spatial radius (5km - 15km) mein query karta hai.</li>
+      <li><strong>Instant Local Fallback:</strong> Agar network connection slow ho ya API rate limit hit ho, to system instant 0ms pre-seeded verified specialist database se certified doctors display karta hai, complete with approximate consultation fee, address, contact, and 1-click Google Maps navigation.</li>
+    </ul>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== PAGE 4 ==================== -->
+  <div class="page">
+    <h2><span class="sec-badge">8</span> Top Viva Questions & Crisp Answers (Examiners Ke Favorite Sawaal)</h2>
+    <p>
+      Viva mein examiners ke saamne confident, technical aur precise bolne ke liye ye key questions yaad rakhein:
+    </p>
+
+    <div class="qa-card no-break">
+      <div class="qa-q">
+        <span>Q1</span> Aapke model ne medical black-box problem ko kaise solve kiya?
+      </div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Humne <strong>Grad-CAM (Gradient-weighted Class Activation Mapping)</strong> integrate kiya hai. Grad-CAM final convolutional layer ke feature maps par target class ke gradients compute karke ek 2D color heatmap generate karta hai. Isse doctor ko visually dikhta hai ki model ne skin ke actual lesion borders aur pigments ko analyze kiya hai, kisi background artifact ko nahi.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q">
+        <span>Q2</span> Aapne dono HAM10000 aur ISIC 2019 datasets kyu use kiye, sirf ek kyu nahi?
+      </div>
+      <div class="qa-a">
+        <strong>Answer:</strong> HAM10000 ek high-quality curated dataset hai (10,015 images), lekin wo primary Taur par Australian aur Austrian clinics ki demographic population se aati hai. <strong>ISIC 2019 (25,331 images)</strong> add karne se training distribution diverse hoti hai, overfitting kam hoti hai, aur broader skin types aur rare lesion categories par model ka generalization significantly improve hota hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q">
+        <span>Q3</span> LLM hallucinations ko rokne ke liye kya mechanism banaya hai?
+      </div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Humne dual-layer safety architecture lagaya hai: Pehla, <strong>Grounded Medical RAG</strong> jo context ko clinically verified skin facts tak restrict karta hai. Doosra, hamara custom <strong>Safety Service Filter</strong> jo response generate hone ke baad real-time parse karta hai—agar model kisi dangerous oral prescription drug (jaise systemic steroids ya antibiotics) ka naam le, to use instantly filter karke safe OTC hygiene aur physical doctor visit advice se replace kar deta hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q">
+        <span>Q4</span> Melanoma ko sabse high-priority alert kyu diya gaya hai?
+      </div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Melanoma skin cancer cases ka sirf ~1% hota hai, lekin skin cancer deaths ka <strong>75% se zyada</strong> cause karta hai kyunki iske cancerous melanocytes lymph nodes aur internal organs mein bahut fast metastasize (spread) hote hain. Isliye Melanoma detect hote hi system highest emergency visual alert trigger karta hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q">
+        <span>Q5</span> Kya yeh system certified dermatologist ko replace kar sakta hai?
+      </div>
+      <div class="qa-a">
+        <strong>Answer:</strong> <strong>Bilkul nahi.</strong> DermAI ek <em>Clinical Decision Support System (CDSS)</em> hai jiska maqsad early screening aur triage facilitate karna hai, na ki definitive biopsy diagnose karna. Hamara platform explicitly medical disclaimer ke sath patient ko qualified dermatologist tak navigate karta hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q">
+        <span>Q6</span> Future scope aur production scaling ke liye kya roadmap hai?
+      </div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Future roadmap mein teen main enhancements hain: (1) <strong>Mobile App (React Native)</strong> with on-device camera guidance to avoid blurry pictures, (2) <strong>TensorRT / ONNX Runtime</strong> lightweight quantized model deployment taaki phone ke andar bina internet ke bhi inference run ho sake, aur (3) Hospital EHR (Electronic Health Records) integration via standard HL7/FHIR protocols.
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <strong>DermAI — B.Tech Major Project 2026–2027</strong> • Computer Science & Engineering • Built by Mohd Hammad
+    </div>
+  </div>
+
+</body>
+</html>
