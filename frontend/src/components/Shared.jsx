@@ -36,9 +36,9 @@ export function RiskBadge({ level }) {
 export function Footer() {
   return (
     <footer className="border-t border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 px-4 py-6 text-center text-xs text-slate-500 dark:text-slate-400 mt-auto transition-colors">
-      <p className="font-medium text-slate-600 dark:text-slate-300">⚠️ Academic Prototype — Not for Clinical Use</p>
+      <p className="font-medium text-slate-600 dark:text-slate-300">B.Tech Major Project 2026–2027 • Comprehensive Skin Health Diagnostic System</p>
       <p className="mt-1">This AI-assisted tool provides preliminary educational skin-health information only. It is not a confirmed diagnosis, prescription, or replacement for professional medical advice. Always consult a qualified dermatologist.</p>
-      <p className="mt-2 text-slate-400 dark:text-slate-500">DermAI © 2024 — Powered by HAM10000 Dataset, EfficientNet-B0, Bidirectional GRU & Gemini AI</p>
+      <p className="mt-2 text-slate-400 dark:text-slate-500">DermAI © 2026–2027 — Trained on HAM10000 Dataset & ISIC 2019 Archive • EfficientNet-B0, Bidirectional GRU & Gemini AI</p>
     </footer>
   );
 }

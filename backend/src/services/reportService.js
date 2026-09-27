@@ -4,7 +4,7 @@ export function buildReport({ scan, symptoms, modelResult, quality, risk, assist
     generatedAt: new Date().toISOString(),
     title: "Preliminary AI-assisted skin health assessment",
     safetyDisclaimer:
-      "This report provides preliminary skin-health information from an academic prototype. It is not a confirmed diagnosis and does not provide prescriptions.",
+      "This report provides preliminary skin-health information from a B.Tech Major Project 2026–2027 AI diagnostic system. It is intended for preliminary screening and educational purposes, not a confirmed clinical prescription.",
     imageReference: scan.image?.filename,
     modelVersion: modelResult?.model_version,
     predictedCondition: modelResult?.top_prediction || "Insufficient confidence",

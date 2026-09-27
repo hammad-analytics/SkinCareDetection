@@ -27,7 +27,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-64px)]">
+    <div className="flex flex-col min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-[#0b0f19] text-slate-800 dark:text-slate-100 transition-colors">
       <div className="mx-auto w-full max-w-6xl px-4 py-6 flex-1">
         {/* Welcome */}
         <div className="rounded-2xl bg-gradient-brand p-6 text-white mb-6 animate-fadeIn">

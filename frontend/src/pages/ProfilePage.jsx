@@ -16,7 +16,7 @@ export default function ProfilePage() {
     { icon: Brain, label: "CNN Model", value: "EfficientNet-B0" },
     { icon: Cpu, label: "RNN Model", value: "Bidirectional GRU" },
     { icon: Eye, label: "Explainability", value: "Grad-CAM" },
-    { icon: Activity, label: "Dataset", value: "HAM10000 (7 classes)" },
+    { icon: Activity, label: "Datasets", value: "HAM10000 & ISIC 2019" },
   ];
 
   return (
