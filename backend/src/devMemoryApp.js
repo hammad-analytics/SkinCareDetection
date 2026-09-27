@@ -225,6 +225,40 @@ export function createMemoryApp() {
 
   app.post("/api/auth/logout", (_req, res) => res.json({ ok: true }));
 
+  /* ── Forgot Password - Verify Identity ── */
+  app.post("/api/auth/forgot-password/verify", (req, res) => {
+    const { email, name } = req.body;
+    if (!email || !name) {
+      return res.status(400).json({ error: { message: "Email and name are required." } });
+    }
+    const user = users.find((u) => u.email === email.toLowerCase().trim());
+    if (!user) {
+      return res.status(404).json({ error: { message: "No account found with this email address." } });
+    }
+    if (user.name.toLowerCase().trim() !== name.toLowerCase().trim()) {
+      return res.status(403).json({ error: { message: "The name does not match our records for this email." } });
+    }
+    res.json({ verified: true, message: "Identity verified successfully." });
+  });
+
+  /* ── Forgot Password - Reset Password ── */
+  app.post("/api/auth/forgot-password/reset", async (req, res) => {
+    const { email, name, newPassword } = req.body;
+    if (!email || !name || !newPassword) {
+      return res.status(400).json({ error: { message: "Email, name, and new password are required." } });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: { message: "Password must be at least 6 characters." } });
+    }
+    const user = users.find((u) => u.email === email.toLowerCase().trim());
+    if (!user || user.name.toLowerCase().trim() !== name.toLowerCase().trim()) {
+      return res.status(403).json({ error: { message: "Verification failed. Please try again." } });
+    }
+    user.passwordHash = await bcrypt.hash(newPassword, 12);
+    saveJson(USERS_FILE, users);
+    res.json({ ok: true, message: "Password has been reset successfully." });
+  });
+
   /* ── All Registered Users (Admin / Debug) ── */
   app.get("/api/auth/users", (_req, res) => {
     res.json({
