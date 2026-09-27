@@ -40,7 +40,8 @@ export default function LoginPage() {
       }
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.error?.message || "Authentication failed. Please try again.");
+      const msg = err.response?.data?.error?.message || err.response?.data?.message || err.message || "Authentication failed. Please try again.";
+      setError(msg);
     } finally {
       setLoading(false);
     }

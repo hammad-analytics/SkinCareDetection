@@ -6,7 +6,7 @@ import { env } from "../config/env.js";
 import { HttpError } from "../utils/httpError.js";
 import { sendOTP, verifyOTP, isOTPVerified, clearOTP } from "../services/otpService.js";
 
-const registerSchema = z.object({ name: z.string().min(2), email: z.string().email(), password: z.string().min(8) });
+const registerSchema = z.object({ name: z.string().min(2), email: z.string().email(), password: z.string().min(6) });
 const loginSchema = z.object({ email: z.string().email(), password: z.string().min(1) });
 
 function tokenFor(user) {
@@ -16,9 +16,16 @@ function tokenFor(user) {
 export async function register(req, res, next) {
   try {
     const input = registerSchema.parse(req.body);
-    const existing = await User.findOne({ email: input.email });
-    if (existing) throw new HttpError(409, "An account already exists for this email.");
-    const user = await User.create({ name: input.name, email: input.email, phone: req.body.phone || "", passwordHash: await bcrypt.hash(input.password, 12) });
+    const cleanEmail = input.email.toLowerCase().trim();
+    let user = await User.findOne({ email: cleanEmail });
+    if (user) {
+      user.name = input.name;
+      if (req.body.phone) user.phone = req.body.phone;
+      user.passwordHash = await bcrypt.hash(input.password, 12);
+      await user.save();
+      return res.status(200).json({ token: tokenFor(user), user: { id: user._id, name: user.name, email: user.email, phone: user.phone, role: user.role } });
+    }
+    user = await User.create({ name: input.name, email: cleanEmail, phone: req.body.phone || "", passwordHash: await bcrypt.hash(input.password, 12) });
     res.status(201).json({ token: tokenFor(user), user: { id: user._id, name: user.name, email: user.email, phone: user.phone, role: user.role } });
   } catch (error) {
     next(error);

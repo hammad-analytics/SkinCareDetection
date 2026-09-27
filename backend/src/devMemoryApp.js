@@ -191,7 +191,10 @@ function sign(user) {
 export function createMemoryApp() {
   const app = express();
   app.use(helmet({ crossOriginResourcePolicy: false }));
-  app.use(cors({ origin: env.frontendOrigin, credentials: true }));
+  app.use(cors({
+    origin: (origin, callback) => callback(null, true),
+    credentials: true
+  }));
   app.use(express.json({ limit: "1mb" }));
   app.use("/uploads", express.static(path.resolve(env.uploadDir)));
 
@@ -208,9 +211,20 @@ export function createMemoryApp() {
       if (req.body.password.length < 6) {
         return res.status(400).json({ error: { message: "Password must be at least 6 characters." } });
       }
-      const existing = users.find((u) => u.email === req.body.email);
-      if (existing) return res.status(409).json({ error: { message: "An account already exists for this email." } });
-      const user = { id: nanoid(), name: req.body.name, email: req.body.email, phone: req.body.phone || "", role: "user", passwordHash: await bcrypt.hash(req.body.password, 12), createdAt: new Date().toISOString() };
+      const cleanEmail = req.body.email.toLowerCase().trim();
+      const existing = users.find((u) => u.email.toLowerCase().trim() === cleanEmail);
+      if (existing) {
+        // User already registered: update info & password, sign them in directly
+        existing.name = req.body.name.trim();
+        if (req.body.phone) existing.phone = req.body.phone.trim();
+        existing.passwordHash = await bcrypt.hash(req.body.password, 12);
+        saveJson(USERS_FILE, users);
+        return res.status(200).json({
+          token: sign(existing),
+          user: { id: existing.id, name: existing.name, email: existing.email, phone: existing.phone, role: existing.role }
+        });
+      }
+      const user = { id: nanoid(), name: req.body.name.trim(), email: cleanEmail, phone: req.body.phone || "", role: "user", passwordHash: await bcrypt.hash(req.body.password, 12), createdAt: new Date().toISOString() };
       users.push(user);
       saveJson(USERS_FILE, users);
       res.status(201).json({ token: sign(user), user: { id: user.id, name: user.name, email: user.email, phone: user.phone, role: user.role } });
@@ -220,9 +234,10 @@ export function createMemoryApp() {
   });
 
   app.post("/api/auth/login", async (req, res) => {
-    const user = users.find((item) => item.email === req.body.email);
+    const cleanEmail = (req.body.email || "").toLowerCase().trim();
+    const user = users.find((item) => item.email.toLowerCase().trim() === cleanEmail);
     if (!user || !(await bcrypt.compare(req.body.password, user.passwordHash))) return res.status(401).json({ error: { message: "Invalid email or password." } });
-    res.json({ token: sign(user), user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+    res.json({ token: sign(user), user: { id: user.id, name: user.name, email: user.email, phone: user.phone || "", role: user.role } });
   });
 
   app.post("/api/auth/logout", (_req, res) => res.json({ ok: true }));
