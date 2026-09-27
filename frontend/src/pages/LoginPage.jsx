@@ -98,51 +98,82 @@ export default function LoginPage() {
   };
 
   const features = [
-    { icon: Eye, title: "AI Skin Analysis", desc: "CNN + RNN multimodal deep learning" },
-    { icon: Shield, title: "Safety Filters", desc: "No prescriptions, no fake diagnoses" },
-    { icon: Brain, title: "AI Dermatologist", desc: "Powered by Gemini AI" },
-    { icon: Activity, title: "Grad-CAM", desc: "Visual model explanations" },
+    { icon: Eye, title: "Intelligent Skin Analysis", desc: "Multi-model deep learning detection engine" },
+    { icon: Shield, title: "Clinically Safe", desc: "Built-in safety filters & medical disclaimers" },
+    { icon: Brain, title: "AI Dermatologist Chat", desc: "Gemini-powered bilingual consultation" },
+    { icon: Activity, title: "Grad-CAM Heatmaps", desc: "Transparent visual model explanations" },
   ];
 
   return (
     <div className="min-h-screen flex">
-      {/* Left: Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-brand flex-col justify-center px-12 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 h-64 w-64 rounded-full bg-white/20 blur-3xl" />
-          <div className="absolute bottom-20 right-10 h-48 w-48 rounded-full bg-white/20 blur-3xl" />
+      {/* Left: Professional Branding Panel */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between px-14 py-12 text-white relative overflow-hidden" style={{ background: "linear-gradient(160deg, #0f172a 0%, #1e293b 40%, #0f766e 100%)" }}>
+        {/* Subtle decorative elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-teal-500/8 blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-72 h-72 rounded-full bg-cyan-400/6 blur-3xl" />
+          <div className="absolute top-1/2 left-1/3 w-48 h-48 rounded-full bg-white/3 blur-2xl" />
         </div>
+
+        {/* Top: Logo */}
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-8">
-            <Stethoscope className="h-12 w-12" />
-            <h1 className="text-4xl font-extrabold">DermAI</h1>
+          <div className="flex items-center gap-3">
+            <div className="h-11 w-11 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/10">
+              <Stethoscope className="h-6 w-6 text-teal-300" />
+            </div>
+            <h1 className="text-2xl font-bold tracking-tight">DermAI</h1>
           </div>
-          <p className="text-xl font-medium text-teal-100 mb-8">AI-Powered Skin Health Assessment Platform</p>
-          <div className="grid grid-cols-2 gap-4">
+        </div>
+
+        {/* Center: Hero Content */}
+        <div className="relative z-10 -mt-8">
+          <h2 className="text-3xl font-bold leading-tight mb-3 tracking-tight">
+            Advanced Skin Health<br />Detection Platform
+          </h2>
+          <p className="text-base text-slate-300 mb-10 leading-relaxed max-w-md">
+            Multimodal AI-powered diagnostics combining deep learning with expert medical knowledge for accurate skin condition assessment.
+          </p>
+
+          <div className="grid grid-cols-2 gap-3">
             {features.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="rounded-xl bg-white/10 backdrop-blur-sm p-4">
-                <Icon className="h-6 w-6 mb-2 text-teal-200" />
-                <h3 className="font-semibold text-sm">{title}</h3>
-                <p className="text-xs text-teal-200 mt-1">{desc}</p>
+              <div key={title} className="rounded-xl bg-white/5 backdrop-blur-sm p-4 border border-white/8 hover:bg-white/8 transition-all duration-300">
+                <Icon className="h-5 w-5 mb-2.5 text-teal-400" />
+                <h3 className="font-semibold text-sm text-white/90">{title}</h3>
+                <p className="text-xs text-slate-400 mt-1 leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
-          <p className="mt-8 text-xs text-teal-300">Major Project 2026–2027 • HAM10000 Dataset • B.Tech Computer Science</p>
+        </div>
+
+        {/* Bottom: Datasets + Credits */}
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-px flex-1 bg-white/10" />
+            <span className="text-[10px] uppercase tracking-widest text-slate-500">Trained On</span>
+            <div className="h-px flex-1 bg-white/10" />
+          </div>
+          <div className="flex items-center justify-center gap-4 mb-3">
+            <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-slate-300">HAM10000 Dataset</span>
+            <span className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs font-medium text-slate-300">ISIC 2019 Archive</span>
+          </div>
+          <p className="text-center text-[11px] text-slate-500">B.Tech Major Project 2026–2027 • Computer Science</p>
         </div>
       </div>
 
       {/* Right: Form */}
-      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-16">
+      <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-16 bg-white">
         <div className="mx-auto w-full max-w-md">
           <div className="flex items-center gap-2 mb-2 lg:hidden">
-            <Stethoscope className="h-8 w-8 text-teal-600" />
-            <span className="text-2xl font-bold text-teal-700">DermAI</span>
+            <div className="h-9 w-9 rounded-lg bg-teal-50 flex items-center justify-center">
+              <Stethoscope className="h-5 w-5 text-teal-600" />
+            </div>
+            <span className="text-xl font-bold text-slate-800">DermAI</span>
           </div>
-          <h2 className="text-2xl font-bold text-slate-800">
+          <h2 className="text-2xl font-bold text-slate-800 tracking-tight">
             {mode === "login" ? "Welcome Back" : "Create Account"}
           </h2>
           <p className="mt-1 text-sm text-slate-500">
-            {mode === "login" ? "Sign in to access your skin health assessments" : "Start your AI-powered skin health journey"}
+            {mode === "login" ? "Sign in to continue to your dashboard" : "Get started with your skin health journey"}
           </p>
 
           {error && (
@@ -155,7 +186,7 @@ export default function LoginPage() {
             {mode === "register" && (
               <div className="animate-fadeIn">
                 <label className="block text-sm font-medium text-slate-700 mb-1">Full Name</label>
-                <input className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors" placeholder="Dr. Jane Smith" value={form.name} onChange={(e) => set("name", e.target.value)} />
+                <input className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none shadow-sm" placeholder="Enter your full name" value={form.name} onChange={(e) => set("name", e.target.value)} />
               </div>
             )}
             {mode === "register" && (
@@ -164,7 +195,7 @@ export default function LoginPage() {
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">+91</span>
                   <input
-                    className="w-full rounded-lg border border-slate-300 pl-12 pr-4 py-3 text-sm transition-colors"
+                    className="w-full rounded-lg border border-slate-200 pl-12 pr-4 py-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none shadow-sm"
                     type="tel"
                     placeholder="98765 43210"
                     maxLength={15}
@@ -176,13 +207,13 @@ export default function LoginPage() {
             )}
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
-              <input className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm transition-colors" type="email" placeholder="you@example.com" value={form.email} onChange={(e) => set("email", e.target.value)} required />
+              <input className="w-full rounded-lg border border-slate-200 px-4 py-3 text-sm transition-all duration-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none shadow-sm" type="email" placeholder="you@example.com" value={form.email} onChange={(e) => set("email", e.target.value)} required />
             </div>
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-1">Password</label>
               <div className="relative">
                 <input
-                  className="w-full rounded-lg border border-slate-300 px-4 py-3 pr-12 text-sm transition-colors"
+                  className="w-full rounded-lg border border-slate-200 px-4 py-3 pr-12 text-sm transition-all duration-200 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 outline-none shadow-sm"
                   type={showPassword ? "text" : "password"}
                   placeholder={mode === "register" ? "Min. 6 characters" : "What is password?"}
                   value={form.password}
@@ -213,7 +244,7 @@ export default function LoginPage() {
               </div>
             )}
 
-            <button disabled={loading} className="w-full flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 disabled:bg-slate-400 transition-colors">
+            <button disabled={loading} className="w-full flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-md hover:bg-teal-700 hover:shadow-lg disabled:bg-slate-400 disabled:shadow-none transition-all duration-200">
               {loading ? <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" /> : <ArrowRight className="h-4 w-4" />}
               {loading ? "Please wait..." : mode === "login" ? "Sign In" : "Create Account"}
             </button>
