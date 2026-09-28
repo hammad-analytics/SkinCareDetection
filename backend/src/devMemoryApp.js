@@ -39,6 +39,15 @@ function saveJson(file, data) {
 }
 
 const users = loadJson(USERS_FILE, []);
+if (users.length === 0) {
+  bcrypt.hash("123456", 12).then((defaultHash) => {
+    users.push(
+      { id: "seed-user-1", name: "Hammad", email: "mohdhammad9359@gmail.com", phone: "8445577300", role: "user", passwordHash: defaultHash, createdAt: new Date().toISOString() },
+      { id: "seed-user-2", name: "Dr. Demo", email: "demo@dermai.com", phone: "9876543210", role: "user", passwordHash: defaultHash, createdAt: new Date().toISOString() }
+    );
+    saveJson(USERS_FILE, users);
+  });
+}
 const scans = loadJson(SCANS_FILE, []);
 const reports = [];
 const chatSessions = new Map();

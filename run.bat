@@ -6,6 +6,26 @@ echo           Starting DermAI Skin Disease Detection System
 echo ======================================================================
 echo.
 
+:: Check if first-time setup is needed on this PC
+set NEED_SETUP=0
+if not exist "%~dp0.env" set NEED_SETUP=1
+if not exist "%~dp0backend\node_modules" set NEED_SETUP=1
+if not exist "%~dp0frontend\node_modules" set NEED_SETUP=1
+if not exist "%~dp0ml-service\.venv" set NEED_SETUP=1
+
+if "%NEED_SETUP%"=="1" (
+    echo [INFO] First time run detected on this PC!
+    echo [INFO] Running automatic setup (installing dependencies)...
+    echo.
+    call "%~dp0setup.bat"
+    exit /b
+)
+
+:: Create required directories if missing
+if not exist "%~dp0backend\uploads" mkdir "%~dp0backend\uploads"
+if not exist "%~dp0backend\data" mkdir "%~dp0backend\data"
+if not exist "%~dp0uploads" mkdir "%~dp0uploads"
+
 echo [1/3] Launching ML Service (FastAPI / HAM10000 CNN on Port 8000)...
 start "DermAI - ML Service (Port 8000)" cmd /k "cd /d %~dp0ml-service && .venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000"
 
