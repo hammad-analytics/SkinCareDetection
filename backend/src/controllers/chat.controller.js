@@ -6,7 +6,11 @@ import { retrieveKnowledge } from "../services/ragService.js";
 import { generateAssistantResponse } from "../services/llmService.js";
 import { filterAssistantText } from "../services/safetyService.js";
 
-const schema = z.object({ scanId: z.string().optional(), message: z.string().min(1), chatId: z.string().optional() });
+const schema = z.object({
+  scanId: z.string().nullable().optional(),
+  message: z.string().min(1),
+  chatId: z.string().nullable().optional()
+});
 
 export async function chat(req, res, next) {
   try {

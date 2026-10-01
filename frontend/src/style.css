@@ -22,6 +22,46 @@ html.dark body {
   color: #f1f5f9;
 }
 
+/* AMOLED Ekdum Dark Mode (Pure Pitch Black #000000) */
+html.amoled {
+  color-scheme: dark;
+}
+html.amoled body {
+  background-color: #000000 !important;
+  color: #f8fafc !important;
+}
+html.amoled .bg-white,
+html.amoled .dark\:bg-slate-900,
+html.amoled .dark\:bg-slate-800,
+html.amoled .bg-slate-50,
+html.amoled .dark\:bg-\[\#0b0f19\] {
+  background-color: #050505 !important;
+  border-color: #1a1a1a !important;
+}
+html.amoled header {
+  background-color: rgba(0, 0, 0, 0.95) !important;
+  border-color: #171717 !important;
+}
+html.amoled .dark\:bg-slate-800\/60,
+html.amoled .dark\:bg-slate-800\/80,
+html.amoled .dark\:bg-slate-700\/20,
+html.amoled .bg-slate-100 {
+  background-color: #0c0c0c !important;
+  border-color: #222222 !important;
+}
+html.amoled input,
+html.amoled select,
+html.amoled textarea {
+  background-color: #080808 !important;
+  border-color: #262626 !important;
+}
+html.amoled ::-webkit-scrollbar-track {
+  background: #000000;
+}
+html.amoled ::-webkit-scrollbar-thumb {
+  background: #27272a;
+}
+
 html.dark ::-webkit-scrollbar-track {
   background: #0f172a;
 }

@@ -65,8 +65,21 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  const updateUser = useCallback((updatedFields) => {
+    setUser((prev) => {
+      const merged = { ...prev, ...updatedFields };
+      localStorage.setItem("user", JSON.stringify(merged));
+      return merged;
+    });
+  }, []);
+
+  const isAdmin = Boolean(
+    user?.role === "admin" ||
+    (user?.email && user.email.toLowerCase() === "mohdhammad9359@gmail.com")
+  );
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, CLASS_NAMES }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser, isAdmin, CLASS_NAMES }}>
       {children}
     </AuthContext.Provider>
   );

@@ -11,6 +11,7 @@ import HistoryPage from "./pages/HistoryPage";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
 import EvolutionTrackerPage from "./pages/EvolutionTrackerPage";
+import AdminPage from "./pages/AdminPage";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -68,6 +69,14 @@ function GuestGuard({ children }) {
   return children;
 }
 
+function AdminGuard({ children }) {
+  const { user, loading, isAdmin } = useAuth();
+  if (loading) return <div className="flex h-screen items-center justify-center"><div className="h-10 w-10 animate-spin rounded-full border-3 border-teal-200 border-t-teal-600" /></div>;
+  if (!user) return <Navigate to="/login" replace />;
+  if (!isAdmin) return <Navigate to="/" replace />;
+  return <ProtectedLayout>{children}</ProtectedLayout>;
+}
+
 import { ThemeProvider } from "./context/ThemeContext";
 
 export default function App() {
@@ -79,6 +88,7 @@ export default function App() {
             <Routes>
             <Route path="/login" element={<GuestGuard><LoginPage /></GuestGuard>} />
             <Route path="/" element={<AuthGuard><DashboardPage /></AuthGuard>} />
+            <Route path="/admin" element={<AdminGuard><AdminPage /></AdminGuard>} />
             <Route path="/scan" element={<AuthGuard><NewScanPage /></AuthGuard>} />
             <Route path="/tracker" element={<AuthGuard><EvolutionTrackerPage /></AuthGuard>} />
             <Route path="/result/:id" element={<AuthGuard><ResultPage /></AuthGuard>} />
