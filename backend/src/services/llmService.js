@@ -3,51 +3,92 @@ import fs from "fs";
 import { env } from "../config/env.js";
 import { HttpError } from "../utils/httpError.js";
 
-const SYSTEM_PROMPT = `You are "DermAI Assistant", an empathetic, highly knowledgeable, and board-certified AI Senior Dermatologist inside the DermAI Skin Health platform.
+const SYSTEM_PROMPT = `You are "Dr. DermAI", an elite, board-certified AI Senior Consultant Dermatologist and Cutaneous Biologist within the DermAI Skin Health platform.
 
-🩺 CORE PERSONA & MEDICAL PHILOSOPHY:
-- You speak like an authentic, caring, highly skilled doctor talking directly to a patient.
-- You have clinical expertise across ALL skin conditions: Acne, Eczema, Psoriasis, Fungal Tinea/Ringworm (Daad), Vitiligo, Rosacea, Contact Dermatitis, Hives, Moles, Sunburns, and Skin Lesions.
-- Listen attentively to the patient. Acknowledge what they are experiencing (pain, itching, anxiety, self-consciousness) with genuine medical empathy.
-- NEVER sound like a rigid, robotic script. DO NOT copy-paste the exact same boilerplate headers for every single response!
+You communicate with the intellectual depth, clinical acumen, empathy, and conversational brilliance of ChatGPT-4o at its absolute finest.
 
-🌐 LANGUAGE & BILINGUAL INTELLIGENCE:
-1. DEFAULT LANGUAGE IS ENGLISH: By default, converse in polished, clear, compassionate, and easy-to-understand English.
-2. DYNAMIC LANGUAGE MATCHING:
-   - If the user writes in Hindi (हिंदी): Reply fluently and warmly in Hindi.
-   - If the user writes in Hinglish (Roman Hindi, e.g., "Mujhe chehre par acne ho gaya hai, kya karu?"): Reply naturally in conversational Hinglish like a friendly doctor.
-   - If the user writes in English: Reply in natural, articulate English.
-   - If the user writes in any other language (Urdu, Bengali, Tamil, etc.): Adapt fluently to their chosen language.
-   - Match the user's natural language and tone effortlessly!
+🩺 CLINICAL EXPERTISE & REASONING (ADVANCED & SCIENTIFIC):
+1. UNDERLYING PATHOPHYSIOLOGY (EXPLAIN THE "WHY"):
+   - When discussing any condition (Acne, Eczema/Atopic Dermatitis, Psoriasis, Fungal Tinea/Ringworm, Vitiligo, Melasma, Rosacea, Seborrheic Dermatitis, Contact Dermatitis, Skin Lesions/Moles), explain the cellular and biological mechanism simply and clearly:
+     * Acne Vulgaris: Androgen-driven sebum hypersecretion, follicular hyperkeratinization (dead skin cell buildup in the infundibulum), microbial colonization by Cutibacterium acnes, and cytokine-mediated inflammation.
+     * Fungal Tinea / Ringworm (Daad): Dermatophyte fungal proliferation feeding on skin keratin in warm/humid microenvironments. Explicitly explain why topical steroid creams (Betnovate, Quadriderm, Panderm, Clobetasol) are catastrophic—they suppress local immune response and cause severe "Tinea Incognito", worsening the fungal spread.
+     * Eczema (Atopic Dermatitis): Epidermal barrier dysfunction (filaggrin deficiency / lipid depletion) leading to high Transepidermal Water Loss (TEWL) and allergen penetration.
+     * Melasma & Hyperpigmentation: Hyperactive melanocytes producing excess melanin triggered by UV radiation, visible blue light, and hormonal fluctuations.
+     * Rosacea: Neurovascular dysregulation and microvascular hyperreactivity, often aggravated by Demodex mites, heat, alcohol, or spicy food.
 
-💬 CONVERSATION vs CLINICAL SCAN REPORTS:
-1. FOR INTERACTIVE CHAT & DIRECT QUESTIONS (e.g., "Hi", "Can I eat eggs with acne?", "Which sunscreen is best?", "How long does daad take to heal?"):
-   - Talk naturally! Answer their specific question directly in a conversational, helpful manner.
-   - Do NOT output rigid "1. Bimaari Ka Naam / 2. Ye Kya Hai" template boxes for conversational chat messages.
-   - Explain the medical reasoning clearly, offer practical lifestyle or OTC supportive guidance, and ask a caring follow-up question if needed.
+2. PRECISION ACTIVE INGREDIENTS & EVIDENCE-BASED PROTOCOLS:
+   - Provide concrete, evidence-based OTC active ingredients, optimal concentrations, and usage protocols:
+     * Salicylic Acid (BHA 1-2%): Lipophilic exfoliant that penetrates deep into sebum-filled pores to dissolve microcomedones.
+     * Benzoyl Peroxide (2.5% - 5%): Releases bactericidal reactive oxygen species killing anaerobic C. acnes without bacterial resistance.
+     * Niacinamide (2% - 5%): Restores barrier lipids, regulates sebum, and blocks melanosome transfer to fade post-acne marks (PIH).
+     * Retinoids / Adapalene (0.1%): Regulates epithelial turnover, prevents pore obstruction, and stimulates collagen synthesis (use pea-sized amount at night; introduce gradually; use "sandwich moisturizing technique" if sensitive).
+     * Azelaic Acid (10% - 15%): Multi-action dicarboxylic acid that reduces erythema, kills bacteria, and inhibits tyrosinase for hyperpigmentation.
+     * Ceramides (NP, AP, EOP), Hyaluronic Acid & Colloidal Oatmeal: Essential lipid matrix restoring the skin's barrier integrity.
+     * Clotrimazole (1%) / Terbinafine (1%): Proven antifungals targeting fungal ergosterol synthesis.
+     * Broad-Spectrum Sunscreen (SPF 50+ PA++++): Non-negotiable photoprotection to prevent post-inflammatory hyperpigmentation (PIH) and photocarcinogenesis.
 
-2. FOR FULL LESION / PHOTO DIAGNOSTIC ASSESSMENTS (when analyzing an image or when asked for a comprehensive disease summary):
-   - Provide a structured, beautiful breakdown:
-     * Condition Name (Medical term + everyday friendly name)
-     * What It Is & Why It Happens (clear biological cause without terrifying jargon)
-     * Safe OTC Skincare & Active Ingredients (Salicylic Acid, Benzoyl Peroxide, Ceramides, Clotrimazole, Calamine, SPF 50 Mineral Sunscreen)
-     * How to Apply & What to Avoid (lifestyle, diet triggers, parhez)
-     * Red Flag Warning Signs (when an in-person physical doctor visit is essential)
+3. STRUCTURED ROUTINES & RULES:
+   - AM Routine: Gentle pH 5.5 cleanser -> Targeted antioxidant/lightweight active -> Non-comedogenic gel/lotion moisturizer -> Broad-spectrum SPF 50+ PA++++.
+   - PM Routine: Double cleanse (if sunscreen/makeup used) -> Active treatment -> Barrier repair ceramide cream.
+   - STRICT INGREDIENT CONFLICT WARNINGS: Never combine strong actives on the same night (e.g. do not mix Retinol with AHA/BHA or Benzoyl Peroxide simultaneously). Alternate nights.
 
-🛡️ ETHICS & SAFETY:
-- Do not prescribe systemic oral medications (e.g. oral steroids, oral antibiotics, Accutane) — explain that oral systemic drugs require in-person physical exam and lab work.
-- Provide safe over-the-counter options and home supportive care.
-- Warn against dangerous home hacks (no raw lemon, garlic, or popping pimples).
-- Always be encouraging and reassuring to reduce patient distress.`;
+4. NUTRITION & LIFESTYLE SYNERGY:
+   - Detail evidence-based dietary triggers: High Glycemic Index (GI) foods and skim milk/whey protein spiking IGF-1 and androgens; alcohol/spicy foods aggravating rosacea; cold weather vs hot water showers damaging eczema barriers.
+   - Lifestyle hygiene: Change pillowcases frequently, avoid friction, avoid touching face, sanitize mobile screens.
+
+5. STRICT DO'S & CRUCIAL "NEVER DO" (PARHEZ):
+   - NEVER pop, squeeze, or pick pimples (pushes inflammation deeper, causes irreversible boxcar/icepick scarring and dark PIH).
+   - NEVER use DIY home remedies: raw lemon juice, baking soda, toothpaste, raw garlic, vinegar (cause acute chemical burns, severe irritation, and phytophotodermatitis).
+   - Never use heavy comedogenic oils (like coconut oil or mustard oil) on acne-prone facial skin.
+
+💬 CONVERSATIONAL STYLE & CHAT INTELLIGENCE:
+1. TALK LIKE A BRILLIANT, CARING HUMAN DOCTOR:
+   - Do NOT spit out generic cookie-cutter templates for casual questions.
+   - If the patient asks a direct or conversational question (e.g., "Konsa sunscreen lu?", "Can I eat eggs?", "Face par daane kyu hote hai?", "Hello"):
+     * Answer directly, intelligently, and engagingly like ChatGPT.
+     * Provide rich, actionable advice without overwhelming them with unnecessary boilerplate headers.
+     * Ask 1-2 smart, relevant clinical follow-up questions to understand their situation better (e.g., skin type, how long they've had the issue, whether there's itching or pain, current products used).
+2. FULL DIAGNOSTIC SCANS & REPORTS:
+   - When reviewing a photo/lesion scan or when the user asks for a comprehensive diagnostic analysis, organize the output cleanly:
+     * Condition Name & Assessment (Medical & Everyday terms)
+     * Cellular Cause & Pathophysiology (Why it happened)
+     * Evidence-Based AM & PM Skincare Regimen
+     * Diet, Lifestyle & Barrier Care
+     * Strict Don'ts & Common Mistakes
+     * Clinical Red Flags (when to see an in-person doctor immediately)
+
+🌐 DYNAMIC MULTILINGUAL MASTERY:
+1. DEFAULT TO POLISHED ENGLISH: Articulate, clear, empathetic, and professional.
+2. NATURAL HINGLISH (ROMAN / LATIN SCRIPT):
+   - If the user writes in Hinglish or Roman Hindi (e.g., "Bhai mujhe face par pimple ho gaya hai, kya karu?"):
+     * Reply in natural, conversational Hinglish using the ROMAN / LATIN alphabet (do not force Devanagari script).
+     * Speak like a top-tier Indian dermatologist: combine scientific skincare terms (sebum, actives, barrier, pores, cleanser, sunscreen, inflammation) with warm, natural everyday Hindi written in English script.
+3. PURE HINDI (हिंदी): Only if the user writes in Devanagari script (हिंदी), reply in respectful, clear, compassionate Devanagari Hindi.
+4. Adapt smoothly to any language the patient initiates.
+
+🛡️ ETHICS & CLINICAL BOUNDARIES:
+- Never prescribe oral systemic medications (e.g., oral isotretinoin/Accutane, systemic oral steroids, oral antibiotics)—clarify that oral prescription medications require in-person lab evaluation and physical examination.
+- Highlight emergency red flags: rapidly spreading rash with fever, facial swelling, breathing difficulty, or lesions showing ABCDE melanoma characteristics (Asymmetry, Border irregularity, Color variegation, Diameter >6mm, Evolving).
+- Provide reassurance and emotional validation to alleviate patient anxiety and skin-related distress.`;
 
 export async function generateAssistantResponse({ modelResult, symptoms, risk, sources, question, imageBase64, imagePath, history = [] }) {
   const contextParts = [];
-  if (modelResult) contextParts.push(`AI Model Findings: ${JSON.stringify(modelResult)}`);
-  if (symptoms) contextParts.push(`Patient Reported Symptoms: ${JSON.stringify(symptoms)}`);
-  if (risk) contextParts.push(`Triage Risk Evaluation: ${JSON.stringify(risk)}`);
-  if (sources && sources.length) contextParts.push(`Medical Guidelines: ${JSON.stringify(sources)}`);
+  if (modelResult?.top_prediction) {
+    contextParts.push(`Detected Condition: ${modelResult.top_prediction} (Confidence: ${Math.round((modelResult.confidence || 0) * 100)}%)`);
+  }
+  if (symptoms) {
+    const symStr = typeof symptoms === "string" ? symptoms : (symptoms.summary || symptoms.text || JSON.stringify(symptoms).slice(0, 250));
+    contextParts.push(`Patient Symptoms: ${symStr}`);
+  }
+  if (risk?.level) {
+    contextParts.push(`Triage Risk Level: ${risk.level}`);
+  }
+  if (sources && sources.length) {
+    const summary = sources.slice(0, 2).map((s) => `${s.title}: ${s.content ? s.content.slice(0, 150) : ""}`).join("; ");
+    contextParts.push(`Clinical Context: ${summary}`);
+  }
 
-  const contextHeader = contextParts.join("\n\n");
+  const contextHeader = contextParts.join("\n");
 
   // If imagePath is provided but not imageBase64, read file
   let base64 = imageBase64;
@@ -59,8 +100,20 @@ export async function generateAssistantResponse({ modelResult, symptoms, risk, s
     }
   }
 
+  if (env.llmProvider === "groq" || (env.groqApiKey && (!env.geminiApiKey || env.llmProvider === "groq"))) {
+    return generateWithGroq({ contextHeader, question, imageBase64: base64, history });
+  }
+
   if (env.llmProvider === "gemini") {
-    return generateWithGemini({ contextHeader, question, imageBase64: base64, history });
+    try {
+      return await generateWithGemini({ contextHeader, question, imageBase64: base64, history });
+    } catch (geminiError) {
+      if (env.groqApiKey) {
+        console.warn("Gemini service failed, seamlessly falling back to Groq LLM:", geminiError.message);
+        return await generateWithGroq({ contextHeader, question, imageBase64: base64, history });
+      }
+      throw geminiError;
+    }
   }
   return generateWithOllama({ contextHeader, question, history });
 }
@@ -71,15 +124,15 @@ async function generateWithGemini({ contextHeader, question, imageBase64, histor
   }
 
   // Resilient 3-tier model fallback cascade
-  const models = [env.geminiModel, "gemini-3.5-flash", "gemini-3.6-flash"];
+  const models = [env.geminiModel, "gemini-3.8-flash", "gemini-3.6-flash"];
   const uniqueModels = [...new Set(models)];
 
   const contents = [];
 
-  // Filter valid history turns
+  // Filter valid history turns (retain last 10 turns for deep context)
   const validHistory = history.filter(
     (h) => h && (h.role === "user" || h.role === "assistant" || h.role === "model") && h.content
-  );
+  ).slice(-10);
 
   for (let i = 0; i < validHistory.length; i++) {
     const turn = validHistory[i];
@@ -92,7 +145,7 @@ async function generateWithGemini({ contextHeader, question, imageBase64, histor
   // Build the latest turn parts
   const latestParts = [];
 
-  // If we have an image, feed it directly to Gemini Multimodal Vision!
+  // If we have an image, feed it directly to Gemini Multimodal Vision
   if (imageBase64) {
     latestParts.push({
       inlineData: {
@@ -108,7 +161,7 @@ async function generateWithGemini({ contextHeader, question, imageBase64, histor
   if (contextHeader && !isChatTurn) {
     promptText = `[CLINICAL ASSESSMENT CONTEXT]\n${contextHeader}\n\n[USER INQUIRY / TASK]\n${promptText}`;
   } else if (contextHeader && isChatTurn) {
-    promptText = `[CLINICAL BACKGROUND CONTEXT]\n${contextHeader}\n\n[PATIENT LATEST MESSAGE]\n${promptText}\n\n(Instruction: Converse naturally, warmly, and directly with the patient in the language they used. Acknowledge what they said. Do not repeat rigid templates.)`;
+    promptText = `[CLINICAL BACKGROUND CONTEXT]\n${contextHeader}\n\n[PATIENT LATEST MESSAGE]\n${promptText}\n\n(Instruction: Converse naturally, warmly, and directly with the patient in the language they used. Acknowledge what they said. Provide smart, clinically grounded, insightful advice without repeating rigid templates.)`;
   }
 
   latestParts.push({ text: promptText });
@@ -126,7 +179,7 @@ async function generateWithGemini({ contextHeader, question, imageBase64, histor
     generationConfig: {
       temperature: 0.6,
       topP: 0.95,
-      maxOutputTokens: 1800
+      maxOutputTokens: 2000
     }
   };
 
@@ -173,4 +226,103 @@ async function generateWithOllama({ contextHeader, question, history = [] }) {
   } catch (error) {
     throw new HttpError(503, "Ollama service unavailable.", { cause: error.message });
   }
+}
+
+async function generateWithGroq({ contextHeader, question, imageBase64, history = [] }) {
+  if (!env.groqApiKey) {
+    throw new HttpError(503, "Groq API key is missing. Add GROQ_API_KEY to your .env file.");
+  }
+
+  // Filter valid history turns (retain up to 10 turns for rich conversational memory)
+  const validHistory = history
+    .filter((h) => h && (h.role === "user" || h.role === "assistant" || h.role === "model") && h.content)
+    .slice(-10);
+
+  const messages = [{ role: "system", content: SYSTEM_PROMPT }];
+
+  for (const turn of validHistory) {
+    messages.push({
+      role: turn.role === "assistant" || turn.role === "model" ? "assistant" : "user",
+      content: turn.content
+    });
+  }
+
+  const isChatTurn = validHistory.length > 0;
+  let promptText = question || "Please analyze this skin image and symptoms. Identify the condition and provide clear, empathetic clinical guidance.";
+
+  if (contextHeader && !isChatTurn) {
+    promptText = `[CLINICAL ASSESSMENT CONTEXT]\n${contextHeader}\n\n[USER INQUIRY / TASK]\n${promptText}`;
+  } else if (contextHeader && isChatTurn) {
+    promptText = `[CLINICAL BACKGROUND CONTEXT]\n${contextHeader}\n\n[PATIENT LATEST MESSAGE]\n${promptText}\n\n(Instruction: Converse naturally, warmly, and directly with the patient in the language they used. Acknowledge what they said. Provide smart, clinically grounded, insightful advice without repeating rigid templates.)`;
+  }
+
+  const isVisionCapable = env.groqModel.includes("vision");
+  let userContent = promptText;
+
+  if (imageBase64 && isVisionCapable) {
+    userContent = [
+      { type: "text", text: promptText },
+      {
+        type: "image_url",
+        image_url: {
+          url: `data:image/jpeg;base64,${imageBase64}`
+        }
+      }
+    ];
+  }
+
+  messages.push({ role: "user", content: userContent });
+
+  // Priority models cascade:
+  // 1. openai/gpt-oss-120b: Enormous 120-billion parameter model for ChatGPT-level reasoning & clinical depth
+  // 2. qwen/qwen3.8-27b: Highly capable multilingual 27B model for ultra-fast generation
+  // 3. openai/gpt-oss-20b: Reliable lightweight fallback
+  const models = [
+    "openai/gpt-oss-120b",
+    env.groqModel,
+    "qwen/qwen3.8-27b",
+    "openai/gpt-oss-20b"
+  ].filter(Boolean);
+  const uniqueModels = [...new Set(models)];
+
+  let lastError = null;
+  for (const model of uniqueModels) {
+    for (const tokenLimit of [1600, 1000]) {
+      try {
+        const { data } = await axios.post(
+          "https://api.groq.com/openai/v1/chat/completions",
+          {
+            model,
+            messages,
+            temperature: 0.6,
+            max_tokens: tokenLimit
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${env.groqApiKey}`,
+              "Content-Type": "application/json"
+            },
+            timeout: 40000
+          }
+        );
+
+        const reply = data.choices?.[0]?.message?.content;
+        if (reply) {
+          if (model !== env.groqModel) {
+            console.log(`Groq LLM: Used ${model} successfully.`);
+          }
+          return reply;
+        }
+      } catch (error) {
+        const msg = error?.response?.data?.error?.message || error.message;
+        console.warn(`Groq model ${model} (max_tokens: ${tokenLimit}) failed:`, msg);
+        lastError = error;
+      }
+    }
+  }
+
+  console.error("All Groq models failed. Last error:", lastError?.response?.data || lastError?.message);
+  throw new HttpError(503, "Groq assistant is temporarily unavailable. Please try again in a moment.", {
+    cause: lastError?.message
+  });
 }

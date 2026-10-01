@@ -1,4 +1,5 @@
 import { z } from "zod";
+import mongoose from "mongoose";
 import { SkinScan } from "../models/SkinScan.js";
 import { SymptomProfile } from "../models/SymptomProfile.js";
 import { CareReport } from "../models/CareReport.js";
@@ -90,6 +91,9 @@ export async function listScans(req, res, next) {
 
 export async function getScan(req, res, next) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      throw new HttpError(404, "Scan not found.");
+    }
     const scan = await SkinScan.findOne({ _id: req.params.id, user: req.user.sub }).populate("symptomProfile").lean();
     if (!scan) throw new HttpError(404, "Scan not found.");
     res.json(scan);

@@ -195,7 +195,8 @@ export default function ChatPage() {
 
       setMessages(prev => [...prev, { role: "assistant", content: data.response, sources: data.sources }]);
     } catch (err) {
-      setMessages(prev => [...prev, { role: "assistant", content: "I'm sorry, I'm unable to connect right now. Please check your internet or retry.", error: true }]);
+      const msg = err?.response?.data?.error?.message || err?.message || "I'm sorry, I'm unable to connect right now. Please check your internet or retry.";
+      setMessages(prev => [...prev, { role: "assistant", content: msg, error: true }]);
     } finally {
       setLoading(false);
     }

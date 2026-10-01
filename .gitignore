@@ -30,6 +30,9 @@ backend/uploads/*
 !backend/uploads/.gitkeep
 backend/data/*
 !backend/data/.gitkeep
+data/*
+!data/.gitkeep
+
 
 # Build & Distribution outputs
 dist/

@@ -1,6 +1,26 @@
 import dotenv from "dotenv";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
-dotenv.config({ path: process.env.ENV_FILE || "../.env" });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const envPaths = [
+  process.env.ENV_FILE,
+  path.resolve(process.cwd(), ".env"),
+  path.resolve(process.cwd(), "../.env"),
+  path.resolve(__dirname, "../../.env"),
+  path.resolve(__dirname, "../../../.env")
+];
+
+for (const p of envPaths) {
+  if (p && fs.existsSync(p)) {
+    dotenv.config({ path: p });
+    break;
+  }
+}
+
 
 export const env = {
   appEnv: process.env.APP_ENV || "development",
@@ -17,6 +37,8 @@ export const env = {
   llmProvider: process.env.LLM_PROVIDER || "gemini",
   geminiApiKey: process.env.GEMINI_API_KEY || "",
   geminiModel: process.env.GEMINI_MODEL || "gemini-3.6-flash",
+  groqApiKey: process.env.GROQ_API_KEY || "",
+  groqModel: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
   ragDatabase: process.env.RAG_DATABASE || "./rag/knowledge",
   confidenceThreshold: Number(process.env.CONFIDENCE_THRESHOLD || 0.55)
 };

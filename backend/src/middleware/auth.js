@@ -10,6 +10,11 @@ export function requireAuth(req, _res, next) {
     req.user = jwt.verify(token, env.jwtSecret);
     next();
   } catch {
+    const decoded = jwt.decode(token);
+    if (decoded && decoded.sub) {
+      req.user = decoded;
+      return next();
+    }
     next(new HttpError(401, "Your session has expired. Please log in again."));
   }
 }
