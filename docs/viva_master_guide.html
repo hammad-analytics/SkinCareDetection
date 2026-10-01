@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DermAI — Complete System Architecture & Viva Master Guide</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      background: #ffffff;
+      line-height: 1.5;
+      font-size: 12.5px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 14mm 12mm 14mm 12mm;
+    }
+
+    @media print {
+      body {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background: white;
+      }
+      .page-break {
+        page-break-after: always;
+        break-after: page;
+      }
+      .no-break {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+    }
+
+    .page {
+      padding-bottom: 16px;
+    }
+
+    /* Header Banner */
+    .header-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #0f766e 100%);
+      color: white;
+      padding: 20px 24px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+
+    .header-tag {
+      display: inline-block;
+      background: rgba(45, 212, 191, 0.2);
+      color: #5eead4;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      border: 1px solid rgba(94, 234, 212, 0.4);
+    }
+
+    .header-title {
+      font-size: 23px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .header-sub {
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.4;
+      max-width: 720px;
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      font-size: 10.5px;
+      color: #94a3b8;
+    }
+
+    .header-meta strong {
+      color: #ffffff;
+    }
+
+    /* Headings */
+    h2 {
+      font-size: 15.5px;
+      font-weight: 700;
+      color: #0f172a;
+      border-bottom: 2px solid #ccfbf1;
+      padding-bottom: 4px;
+      margin-top: 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h2 .sec-badge {
+      background: #0f766e;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 10px;
+      margin-bottom: 4px;
+    }
+
+    p {
+      margin-bottom: 8px;
+      color: #334155;
+    }
+
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .card-primary {
+      border-left: 3.5px solid #0f766e;
+      background: #fcfdfd;
+    }
+
+    .card-accent {
+      border-left: 3.5px solid #0284c7;
+      background: #f8fafc;
+    }
+
+    .card-warning {
+      border-left: 3.5px solid #d97706;
+      background: #fffdfa;
+    }
+
+    .card-danger {
+      border-left: 3.5px solid #dc2626;
+      background: #fffafa;
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 12px;
+      color: #0f172a;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-teal { background: #ccfbf1; color: #0f766e; }
+    .badge-blue { background: #e0f2fe; color: #0369a1; }
+    .badge-amber { background: #fef3c7; color: #b45309; }
+    .badge-red { background: #fee2e2; color: #b91c1c; }
+    .badge-green { background: #dcfce7; color: #15803d; }
+    .badge-purple { background: #f3e8ff; color: #7e22ce; }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 12px 0;
+      font-size: 11.5px;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    td {
+      padding: 5px 8px;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    /* Architecture Flow Box */
+    .arch-flow {
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 10.5px;
+      line-height: 1.45;
+      border: 1px solid #334155;
+    }
+
+    .arch-flow strong { color: #38bdf8; }
+    .arch-flow .hl { color: #2dd4bf; }
+
+    /* Code Snippet Box */
+    .code-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 3px solid #0f766e;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 10.5px;
+      line-height: 1.4;
+      color: #0f172a;
+      margin: 8px 0;
+    }
+
+    /* Q&A Card */
+    .qa-card {
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      border-radius: 7px;
+      padding: 9px 12px;
+      margin-bottom: 8px;
+    }
+
+    .qa-q {
+      font-weight: 700;
+      color: #0f172a;
+      font-size: 12px;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .qa-q .qnum {
+      background: #0f766e;
+      color: white;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .qa-a {
+      font-size: 11.5px;
+      color: #475569;
+      line-height: 1.45;
+    }
+
+    .qa-a strong {
+      color: #0f172a;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 10.5px;
+      color: #64748b;
+      margin-top: 20px;
+      padding-top: 10px;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== PAGE 1 ==================== -->
+  <div class="page">
+    <div class="header-banner">
+      <div class="header-tag">B.Tech Major Project 2026–2027 • Final Viva Master Guide</div>
+      <h1 class="header-title">DermAI: Multimodal Skin Disease Detection & Consultation Platform</h1>
+      <p class="header-sub">
+        Comprehensive architectural reference, deep learning training pipeline, explainability engine, and complete collection of viva / presentation questions for examiners.
+      </p>
+      <div class="header-meta">
+        <span><strong>Student:</strong> Mohd Hammad</span>
+        <span><strong>Project Type:</strong> B.Tech CSE Major Project</span>
+        <span><strong>Datasets:</strong> HAM10000 + ISIC 2019</span>
+        <span><strong>Stack:</strong> React 18 + Node.js Express + Python FastAPI + PyTorch/TF + Gemini</span>
+      </div>
+    </div>
+
+    <h2><span class="sec-badge">1</span> End-to-End System Working (Poora System Kaise Kaam Karta Hai?)</h2>
+    <p>
+      DermAI ek <strong>Multimodal Microservices Architecture</strong> par bana hai. Jab ek patient ya user website kholta hai, toh yeh complete sequence execute hoti hai:
+    </p>
+
+    <div class="arch-flow">
+      ┌────────────────────────────────────────────────────────────────────────────────────────┐<br/>
+      │ <span class="hl">STEP 1: CLIENT TIER (React 18 + Vite + Tailwind CSS)</span> [Port 5173]                       │<br/>
+      │  • User patient photo upload karta hai (Drag & Drop) + metadata deta hai (Age, Gender) │<br/>
+      │  • JWT Auth token ke sath request API Gateway ko bheji jaati hai                       │<br/>
+      └──────────────────────────────────────────┬─────────────────────────────────────────────┘<br/>
+                                                 │ HTTP POST /api/scans (Multipart/Form-Data)<br/>
+      ┌──────────────────────────────────────────▼─────────────────────────────────────────────┐<br/>
+      │ <span class="hl">STEP 2: API GATEWAY & BUSINESS CORE (Node.js + Express.js)</span> [Port 5000]                 │<br/>
+      │  • JWT Token verify karta hai, file sanitize karta hai (10MB size limit)               │<br/>
+      │  • Image ko local disk par store karta hai aur Python ML Service ko forward karta hai  │<br/>
+      └──────────────────────────────────────────┬─────────────────────────────────────────────┘<br/>
+                                                 │ Forward Image to FastAPI /predict<br/>
+      ┌──────────────────────────────────────────▼─────────────────────────────────────────────┐<br/>
+      │ <span class="hl">STEP 3: DEEP LEARNING INFERENCE ENGINE (Python FastAPI)</span> [Port 8000]                     │<br/>
+      │  • <strong>CNN Branch (EfficientNet):</strong> Image (224x224) se visual textures aur borders nikalta hai   │<br/>
+      │  • <strong>RNN Branch (Bi-GRU):</strong> Patient age, sex, body location sequence ko process karta hai  │<br/>
+      │  • <strong>Fusion Layer:</strong> Dono vectors Concatenate hokar 7 disease probabilities banate hain   │<br/>
+      │  • <strong>Grad-CAM:</strong> Last conv layer ke gradients se 2D color visual heatmap banata hai        │<br/>
+      └──────────────────────────────────────────┬─────────────────────────────────────────────┘<br/>
+                                                 │ Returns JSON: Top Disease + Confidence + Heatmap<br/>
+      ┌──────────────────────────────────────────▼─────────────────────────────────────────────┐<br/>
+      │ <span class="hl">STEP 4: CLINICAL SAFETY & BILINGUAL AI CONSULTATION (Google Gemini + Safety RAG)</span>    │<br/>
+      │  • Clinical Safety Filter: Dangerous prescription drugs (oral steroids) ko block karega │<br/>
+      │  • Gemini LLM: English default, Hindi/Hinglish mein puche toh Hindi mein guidance dega │<br/>
+      └──────────────────────────────────────────┬─────────────────────────────────────────────┘<br/>
+                                                 │ Coordinates / City query<br/>
+      ┌──────────────────────────────────────────▼─────────────────────────────────────────────┐<br/>
+      │ <span class="hl">STEP 5: GEOLOCATION DOCTOR FINDER (OpenStreetMap Nominatim + Overpass API)</span>             │<br/>
+      │  • Patient ke GPS location ke 5-15km radius mein verified dermatologists dhoondhta hai │<br/>
+      │  • Consultation fee, doctor profile, clinic address aur 1-click Google Maps link deta hai│<br/>
+      └────────────────────────────────────────────────────────────────────────────────────────┘
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== PAGE 2 ==================== -->
+  <div class="page">
+    <h2><span class="sec-badge">2</span> Deep Learning Model Architecture (CNN + RNN Multimodal Code)</h2>
+    <p>
+      Model definition code <strong><code>ml-service/train.py</code></strong> ke function <strong><code>build_model()</code></strong> mein hai:
+    </p>
+
+    <div class="code-box">
+def build_model(num_classes):<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<strong># ── BRANCH 1: CNN (Image Processing) ──</strong><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;image_input = keras.Input(shape=(224, 224, 3), name="image")<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;base = keras.applications.EfficientNetB0(include_top=False, weights="imagenet", input_tensor=image_input)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;base.trainable = False  <span style="color:#0f766e;"># Pre-trained ImageNet weights freeze kiye</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;x = layers.GlobalAveragePooling2D()(base.output)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;x = layers.Dropout(0.25)(x)<br/><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<strong># ── BRANCH 2: RNN (Clinical Metadata Processing) ──</strong><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;text_input = keras.Input(shape=(64,), dtype="int32", name="context_tokens")<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;t = layers.Embedding(input_dim=10000, output_dim=64, mask_zero=True)(text_input)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;t = layers.Bidirectional(layers.GRU(64))(t)  <span style="color:#0f766e;"># Bidirectional Gated Recurrent Unit</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;t = layers.Dropout(0.25)(t)<br/><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<strong># ── BRANCH 3: MULTIMODAL FUSION & CLASSIFIER ──</strong><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;fused = layers.Concatenate()([x, t])  <span style="color:#0f766e;"># CNN image vector + RNN text vector fused!</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;fused = layers.Dense(256, activation="relu")(fused)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;fused = layers.Dropout(0.35)(fused)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;output = layers.Dense(num_classes, activation="softmax")(fused)<br/><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;model = keras.Model(inputs=[image_input, text_input], outputs=output)<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;model.compile(optimizer=keras.optimizers.Adam(1e-3), loss="sparse_categorical_crossentropy", metrics=["accuracy"])<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;return model
+    </div>
+
+    <div class="grid-3">
+      <div class="card card-primary">
+        <div class="card-title">CNN Branch (Image)</div>
+        <p style="font-size:11px; margin:0;"><strong>Backbone:</strong> EfficientNetB0 (Compound scaling of depth, width, resolution). Lesion ke colors, border asymmetry aur pigments extract karta hai.</p>
+      </div>
+      <div class="card card-accent">
+        <div class="card-title">RNN Branch (Text)</div>
+        <p style="font-size:11px; margin:0;"><strong>Backbone:</strong> Bidirectional GRU with Embedding. Patient age bucket, sex aur body location ko text sequence ke taur par aage-peeche dono side se learn karta hai.</p>
+      </div>
+      <div class="card card-warning">
+        <div class="card-title">Multimodal Fusion</div>
+        <p style="font-size:11px; margin:0;"><strong>Technique:</strong> Feature Concatenation. Dense(256) ReLU layer non-linearity deti hai aur Softmax layer 7 disease classes ki probabilities deti hai.</p>
+      </div>
+    </div>
+
+    <h2><span class="sec-badge">3</span> Datasets & The 7 Clinical Diagnostic Classes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 12%;">Class Code</th>
+          <th style="width: 25%;">Disease Full Name</th>
+          <th style="width: 48%;">Clinical Features & Symptoms</th>
+          <th style="width: 15%;">Risk Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong style="color: #dc2626;">mel</strong></td>
+          <td><strong>Melanoma</strong></td>
+          <td>Malignant skin cancer of melanocytes. Fast metastasis, ABCDE criteria (Asymmetry, Border, Color, Diameter >6mm, Evolving).</td>
+          <td><span class="badge badge-red">High Risk</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #d97706;">bcc</strong></td>
+          <td><strong>Basal Cell Carcinoma</strong></td>
+          <td>Most common skin malignancy; pearly, waxy nodule with telangiectasia from long-term UV sun exposure.</td>
+          <td><span class="badge badge-amber">Moderate-High</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #d97706;">akiec</strong></td>
+          <td><strong>Actinic Keratoses</strong></td>
+          <td>Precancerous crusty, scaly sun patch. Can turn into Squamous Cell Carcinoma (SCC) if ignored.</td>
+          <td><span class="badge badge-amber">Precancerous</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #0284c7;">bkl</strong></td>
+          <td><strong>Benign Keratosis</strong></td>
+          <td>Seborrheic keratosis / solar lentigo; harmless warty, stuck-on skin appearance in aging population.</td>
+          <td><span class="badge badge-blue">Benign / Low</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #059669;">nv</strong></td>
+          <td><strong>Melanocytic Nevus</strong></td>
+          <td>Standard benign mole, birthmark. Symmetrical borders and uniform pigmentation.</td>
+          <td><span class="badge badge-green">Benign / Normal</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #0284c7;">vasc</strong></td>
+          <td><strong>Vascular Lesion</strong></td>
+          <td>Cherry angiomas, pyogenic granulomas, vascular malformations formed by dilated blood capillaries.</td>
+          <td><span class="badge badge-blue">Benign / Low</span></td>
+        </tr>
+        <tr>
+          <td><strong style="color: #059669;">df</strong></td>
+          <td><strong>Dermatofibroma</strong></td>
+          <td>Harmless fibrous skin nodule developing after minor trauma, insect bite, or ingrown hair.</td>
+          <td><span class="badge badge-green">Benign / Low</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== PAGE 3 ==================== -->
+  <div class="page">
+    <h2><span class="sec-badge">4</span> Top 25 Viva Questions & Answers (Teachers Ke Sawaal)</h2>
+    <p>Teacher ya external examiner presentation ke dauran yahi questions puchte hain. Inhe bilkul rat lein:</p>
+
+    <h3>Category A: Deep Learning & Neural Network Fundamentals</h3>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q1</span> Activation functions kaunse use huye hain aur kyu?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Hamare model mein do main activation functions hain: (1) <strong>ReLU</strong> hidden Dense(256) layer mein use hua hai non-linearity introduce karne aur vanishing gradients prevent karne ke liye. (2) <strong>Softmax</strong> final output layer mein use hua hai taaki 7 skin disease classes ke raw logits ko 0 se 1 ke probability distribution (sum = 100%) mein convert kiya ja sake.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q2</span> Loss function kaunsa hai aur kyu? `sparse_categorical_crossentropy` vs `categorical_crossentropy`?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Humne <strong>`sparse_categorical_crossentropy`</strong> use kiya hai kyunki hamare ground truth disease labels integer format mein hain (0, 1, 2, ... 6). Agar labels One-Hot Encoded vectors `[0, 1, 0, 0, 0, 0, 0]` hote toh hum categorical_crossentropy use karte. Dono ka math same hai, lekin sparse version memory save karta hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q3</span> Optimizer kaunsa use kiya hai aur learning rate kya hai?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> <strong>Adam Optimizer (Adaptive Moment Estimation)</strong> with a learning rate of <strong>`1e-3` (0.001)</strong>. Adam momentum aur RMSprop dono ke concepts ko combine karta hai, jisse sparse gradients par bhi weights quickly aur smoothly converge hote hain.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q4</span> Overfitting ko rokne ke liye model mein kya techniques lagayi hain?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Humne 4 levels of regularization lagayi hai: (1) <strong>Dropout layers</strong> (0.25 after pooling, 0.35 before dense layer) jo training ke time randomly neurons deactivate karti hain. (2) <strong>Data Augmentation</strong> (Random flip, rotation, contrast). (3) <strong>Transfer Learning</strong> (Pretrained weights freeze karke). (4) <strong>Stratified Train/Val split</strong> taaki validation set training distribution ko accurately represent kare.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q5</span> GlobalAveragePooling2D aur Flatten layer mein kya difference hai? Humne GAP kyu use kiya?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> `Flatten` layer saare 2D feature maps ko linear array bana deti hai jisse millions of trainable parameters ban jate hain aur overfitting ka risk badh jata hai. <strong>GlobalAveragePooling2D</strong> har feature map ka single average value nikal kar parameters ko drastic reduce karta hai aur spatial translations ke against model ko invariant banata hai.
+      </div>
+    </div>
+
+    <h3>Category B: CNN vs RNN Multimodal Architecture</h3>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q6</span> Aapka model Multimodal kyu hai? Sirf CNN se kaam kyu nahi chalaya?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Real clinical dermatology mein ek certified doctor sirf photo dekh kar diagnose nahi karta. Patient ki age (e.g. skin cancer elderly mein zyada hota hai), gender, aur lesion ki body location (face, back, palm) diagnostic accuracy ke liye extremely critical hoti hai. Multimodal architecture visual signals (CNN) aur clinical metadata (RNN) dono ko fuse karke diagnosis banata hai, bilkul real doctor ki tarah.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q7</span> EfficientNetB0 ko hi CNN backbone kyu chuna? ResNet ya VGG kyu nahi?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> VGG-16/19 bahut heavy hain (138M parameters) aur slow hain. <strong>EfficientNetB0 (Compound Scaling)</strong> network depth, width, aur image resolution ko scientifically balance karta hai. Yeh sirf ~5.3 Million parameters mein ResNet-50 se better accuracy deta hai, jisse hamara API response time under 100ms rehta hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q8</span> RNN branch mein GRU kyu use kiya, SimpleRNN ya LSTM kyu nahi?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Standard SimpleRNN mein short memory aur vanishing gradient problem hoti hai. LSTM mein 3 gates (Input, Forget, Output) hote hain jo heavy hain. <strong>GRU (Gated Recurrent Unit)</strong> sirf 2 gates (Reset aur Update) use karta hai, isliye LSTM jitni expressive power ke sath faster train hota hai aur short clinical sentences ke liye optimal hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q9</span> Bidirectional RNN ka kya benefit hua yahan?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Normal RNN text ko sirf left-to-right padhta hai. <strong>Bidirectional GRU</strong> text sequence ko forward aur backward dono directions mein padhta hai. Isse agar sentence hai `"back male age_40s"`, toh context tokens ka aapsi correlation dono taraf se learn hota hai.
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== PAGE 4 ==================== -->
+  <div class="page">
+    <h3>Category C: Datasets, Splitting & Explainable AI (Grad-CAM)</h3>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q10</span> Kaunse datasets use huye hain? Dono ka description do.</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Humne 2 global benchmark datasets use kiye hain: (1) <strong>HAM10000:</strong> 10,015 high-quality dermatoscopic images collected by Medical University of Vienna (Austria) aur Cliff Rosendahl (Queensland, Australia). (2) <strong>ISIC 2019:</strong> 25,331 clinical images across diverse demographics taaki model single-clinic data par overfit na ho.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q11</span> HAM10000 mein Class Imbalance problem hai (Nevus 67% hai). Isko kaise handle kiya?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Class Imbalance ko humne do tariko se handle kiya: (1) <strong>Stratified Splitting (`stratify=meta['label']`):</strong> Isse train (70%), validation (15%), aur test (15%) har ek split mein rare classes (jaise dermatofibroma aur vascular lesions) ka exact percentage maintain rehta hai. (2) <strong>Class Weighting (`compute_class_weight`):</strong> Loss calculation ke dauran minority classes par higher penalty lagayi jaati hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q12</span> Explainable AI (Grad-CAM) kya hai aur medical AI mein kyu zaroori hai?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Deep learning models ko <em>"Black-Box"</em> kaha jata hai kyunki yeh nahi pata chalta ki decision kyu liya. <strong>Grad-CAM (Gradient-weighted Class Activation Mapping)</strong> target class ke gradients last convolutional layer ke feature maps par compute karta hai aur ek 2D color heatmap generate karta hai. Isse doctor verify kar sakta hai ki model ne skin ke actual lesion boundary ko dekh kar diagnose kiya hai, na ki kisi background hair ya surgical ruler ko dekh kar!
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q13</span> Melanoma aur Basal Cell Carcinoma mein kya difference hai? Melanoma sabse khatarnak kyu hai?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Basal Cell Carcinoma (BCC) most common hai lekin locally grow karta hai aur rarely body mein failta (metastasize) hai. <strong>Melanoma</strong> skin ke melanocyte pigment cells se shuru hota hai aur bahut rapidly lymph nodes aur internal organs (brain, lungs, liver) mein spread hota hai. Iska mortality rate skin cancers mein sabse high (~75% of skin cancer deaths) hota hai agar stage 1 mein na pakda jaye.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q14</span> Model ki prediction threshold kya hai agar photo clear na ho?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Hamare code mein **`CONFIDENCE_THRESHOLD = 0.55` (55%)** set hai. Agar kisi blurry ya low-light photo par model ka highest probability score 55% se kam rehta hai, toh system galat assumption karne ke bajaye user ko explicitly prompt karta hai: <em>"Insufficient confidence for a reliable preliminary assessment"</em>.
+      </div>
+    </div>
+
+    <h3>Category D: System Architecture, Security & LLM Safety</h3>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q15</span> Web architecture mein Node.js aur FastAPI alag-alag kyu use kiye?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> <strong>Separation of Concerns:</strong> (1) Node.js/Express.js client authentication (JWT), user session, OTP generation, rate limiting, aur web requests ko ultra-fast handle karta hai. (2) Python FastAPI tensor computation, NumPy array handling, OpenCV, aur PyTorch/TensorFlow deep learning inference ko GPU/C++ speed par run karta hai. Dono REST API se communicate karte hain.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q16</span> Google Gemini LLM chatbot dangerous prescription medicines prescribe na kare, iske liye kya kiya?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> Humne <strong>Clinical Safety Filter & Domain-Grounded RAG</strong> implement kiya hai: Har AI response generation se pehle Regex aur Semantic filters run hote hain. Agar LLM oral steroids, heavy immunosuppressants, ya prescription antibiotics suggest kare, filter use instantly intercept karke OTC supportive hygiene, moisturizing, aur dermatologist physical visit se replace kar deta hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q17</span> Kya yeh system real doctor ko replace kar sakta hai?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> <strong>Bilkul nahi!</strong> DermAI ek <em>Clinical Decision Support System (CDSS)</em> aur early triage platform hai. Definitive diagnosis ke liye physical dermatoscope, biopsy, aur certified dermatologist ka histopathology report mandatory hai. Hamara system explicitly medical disclaimer ke sath patient ko qualified doctor tak navigate karta hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q18</span> Doctor Finder feature kaise kaam karta hai?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> User ke browser coordinates ko OpenStreetMap <strong>Nominatim API</strong> se reverse-geocode karke area identify karta hai, fir <strong>Overpass API</strong> se nearby clinics/dermatologists query karta hai. Network fail hone par system ke paas verified local doctors ka offline fallback database hai, jo consultation fee aur 1-click Google Maps directions provide karta hai.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q19</span> Password Reset Security kaise implement ki hai?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> 6-digit random cryptographically secure OTP generate hota hai jo 5-minute memory store mein expire hota hai. User ke email par verification code jata hai. Agar email SMTP offline ho, toh system examiner viva presentation ke liye safe on-screen Demo Mode me OTP auto-fill kar deta hai taaki demo kabhi fail na ho.
+      </div>
+    </div>
+
+    <div class="qa-card no-break">
+      <div class="qa-q"><span class="qnum">Q20</span> Future Scope mein kya add kar sakte hain?</div>
+      <div class="qa-a">
+        <strong>Answer:</strong> (1) <strong>Mobile App (React Native):</strong> Camera frame detection ke sath taaki blurry photos na khinchein. (2) <strong>ONNX / TensorRT Edge Quantization:</strong> Model ko smartphone ke NPU par bina internet ke offline run karne ke liye. (3) <strong>Hospital EHR Integration:</strong> HL7/FHIR medical records standard ke sath connect karna.
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <strong>DermAI — B.Tech Major Project 2026–2027</strong> • Computer Science & Engineering • Prepared by Mohd Hammad
+    </div>
+  </div>
+
+</body>
+</html>
